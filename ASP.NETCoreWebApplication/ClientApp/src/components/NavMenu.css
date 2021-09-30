@@ -4,6 +4,11 @@
   word-break: break-all;
 }
 
+.logoImg {
+  height: 122px;
+  width: 202px;
+}
+
 html {
   font-size: 14px;
 }

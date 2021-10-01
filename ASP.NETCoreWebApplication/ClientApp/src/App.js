@@ -7,6 +7,7 @@ import { Counter } from './components/Counter';
 import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
 import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
 import { ApplicationPaths } from './components/api-authorization/ApiAuthorizationConstants';
+import Admin from './components/admin/index';
 
 import './custom.css'
 
@@ -15,12 +16,13 @@ export default class App extends Component {
 
   render () {
     return (
-      <Layout>
+      <React.Fragment>
+        <Route path='/admin' component={Admin} />
         <Route exact path='/' component={Home} />
         <Route path='/counter' component={Counter} />
         <AuthorizeRoute path='/fetch-data' component={FetchData} />
         <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
-      </Layout>
+      </React.Fragment>
     );
   }
 }

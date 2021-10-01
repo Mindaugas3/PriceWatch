@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import authService from './api-authorization/AuthorizeService'
+import { Layout } from './Layout';
 
 export class FetchData extends Component {
   static displayName = FetchData.name;
@@ -15,26 +16,28 @@ export class FetchData extends Component {
 
   static renderForecastsTable(forecasts) {
     return (
-      <table className='table table-striped' aria-labelledby="tabelLabel">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
-          </tr>
-        </thead>
-        <tbody>
-          {forecasts.map(forecast =>
-            <tr key={forecast.date}>
-              <td>{forecast.date}</td>
-              <td>{forecast.temperatureC}</td>
-              <td>{forecast.temperatureF}</td>
-              <td>{forecast.summary}</td>
+      <Layout>
+        <table className='table table-striped' aria-labelledby="tabelLabel">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Temp. (C)</th>
+              <th>Temp. (F)</th>
+              <th>Summary</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {forecasts.map(forecast =>
+              <tr key={forecast.date}>
+                <td>{forecast.date}</td>
+                <td>{forecast.temperatureC}</td>
+                <td>{forecast.temperatureF}</td>
+                <td>{forecast.summary}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </Layout>
     );
   }
 
@@ -44,11 +47,11 @@ export class FetchData extends Component {
       : FetchData.renderForecastsTable(this.state.forecasts);
 
     return (
-      <div>
+      <Layout>
         <h1 id="tabelLabel" >Weather forecast</h1>
         <p>This component demonstrates fetching data from the server.</p>
         {contents}
-      </div>
+      </Layout>
     );
   }
 

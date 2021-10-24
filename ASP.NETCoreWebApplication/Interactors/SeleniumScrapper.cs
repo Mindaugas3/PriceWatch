@@ -65,18 +65,17 @@ namespace ASP.NETCoreWebApplication.Interactors
             }
         }
 
-        private static WebDriver CreateFirefoxDriver()
+        public static WebDriver CreateFirefoxDriver()
         {
             var options = new FirefoxOptions();
-            // options.AddArgument("--headless");
+            options.AddArgument("--headless");
             return new FirefoxDriver(options);
         }
 
-        private static WebDriver CreateChromeDriver()
+        public static WebDriver CreateChromeDriver()
         {
             var options = new ChromeOptions();
-            // options.AddArgument("--headless");
-
+            options.AddArgument("--headless");
             return new ChromeDriver(options);
         }
     }

@@ -8,12 +8,25 @@ import { LoginActions, QueryParameterNames, ApplicationPaths } from './ApiAuthor
 // This is the starting point for the login process. Any component that needs to authenticate
 // a user can simply perform a redirect to this component with a returnUrl query parameter and
 // let the component perform the login and return back to the return url.
-export class Login extends Component {
-    constructor(props) {
+
+interface LoginProps {
+    action: keyof typeof LoginActions
+}
+
+interface LoginState {
+    message: string | null
+}
+
+interface IInternalState {
+    returnUrl: string
+}
+
+export class Login extends Component<LoginProps, LoginState> {
+    constructor(props: LoginProps) {
         super(props);
 
         this.state = {
-            message: undefined
+            message: null
         };
     }
 
@@ -63,7 +76,7 @@ export class Login extends Component {
         }
     }
 
-    async login(returnUrl) {
+    async login(returnUrl: string) {
         const state = { returnUrl };
         const result = await authService.signIn(state);
         switch (result.status) {
@@ -73,7 +86,7 @@ export class Login extends Component {
                 await this.navigateToReturnUrl(returnUrl);
                 break;
             case AuthenticationResultStatus.Fail:
-                this.setState({ message: result.message });
+                this.setState({ message: result.message ?? null });
                 break;
             default:
                 throw new Error(`Invalid status result ${result.status}.`);
@@ -92,14 +105,14 @@ export class Login extends Component {
                 await this.navigateToReturnUrl(this.getReturnUrl(result.state));
                 break;
             case AuthenticationResultStatus.Fail:
-                this.setState({ message: result.message });
+                this.setState({ message: result.message ?? null });
                 break;
             default:
                 throw new Error(`Invalid authentication result status '${result.status}'.`);
         }
     }
 
-    getReturnUrl(state) {
+    getReturnUrl(state?: IInternalState): string {
         const params = new URLSearchParams(window.location.search);
         const fromQuery = params.get(QueryParameterNames.ReturnUrl);
         if (fromQuery && !fromQuery.startsWith(`${window.location.origin}/`)) {
@@ -117,7 +130,7 @@ export class Login extends Component {
         this.redirectToApiAuthorizationPath(ApplicationPaths.IdentityManagePath);
     }
 
-    redirectToApiAuthorizationPath(apiAuthorizationPath) {
+    redirectToApiAuthorizationPath(apiAuthorizationPath: string) {
         const redirectUrl = `${window.location.origin}${apiAuthorizationPath}`;
         // It's important that we do a replace here so that when the user hits the back arrow on the
         // browser he gets sent back to where it was on the app instead of to an endpoint on this
@@ -125,7 +138,7 @@ export class Login extends Component {
         window.location.replace(redirectUrl);
     }
 
-    navigateToReturnUrl(returnUrl) {
+    navigateToReturnUrl(returnUrl: string) {
         // It's important that we do a replace here so that we remove the callback uri with the
         // fragment containing the tokens from the browser history.
         window.location.replace(returnUrl);

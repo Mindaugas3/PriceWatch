@@ -38,9 +38,9 @@ namespace ASP.NETCoreWebApplication.Utils
             List<Dictionary<string, string>> AggregateData = new List<Dictionary<string, string>>();
             foreach (var childNode in mainNodes)
             {
-                Console.Write(childNode.SelectNodes(this.XPathDataKeys["price"]).FirstOrDefault().InnerHtml + "\n");
+                Console.Write(childNode.SelectNodes(this.XPathDataKeys["price"])?.FirstOrDefault()?.InnerHtml + "\n");
                 //SELECT BY XPATH AND REMOVE FROM HTML NODE - LINQ
-                this.XPathRemovalList.Select(x => childNode.SelectNodes(x)?.ToList())
+                this.XPathRemovalList.Select(x => childNode?.SelectNodes(x)?.ToList())
                     .Where(x => x != null)
                     .SelectMany(x => x)
                     .ToList()
@@ -50,7 +50,7 @@ namespace ASP.NETCoreWebApplication.Utils
                 Dictionary<string, string> keyedData = this.XPathDataKeys.Keys
                     .ToDictionary(x => x,
                     x => childNode.SelectNodes(this.XPathDataKeys[x])
-                        .Where(y => y != null)
+                        ?.Where(y => y != null)
                         .Select(y => y.OriginalName == "img" ? y.Attributes["src"].Value : y.InnerHtml)
                         .ToArray()
                         .Aggregate((a, b) => a + ";" + b) //Data lists of the same selector are separated with semicolon

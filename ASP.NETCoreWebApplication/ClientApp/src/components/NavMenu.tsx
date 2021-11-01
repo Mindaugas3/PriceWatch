@@ -5,10 +5,14 @@ import { LoginMenu } from './api-authorization/LoginMenu';
 import './NavMenu.css';
 // import '../../public/PW-logomaster.jpg';
 
-export class NavMenu extends Component {
+interface INavMenuState {
+  collapsed: boolean
+}
+
+export class NavMenu extends Component<any, INavMenuState> {
   static displayName = NavMenu.name;
 
-  constructor (props) {
+  constructor (props: any) {
     super(props);
 
     this.toggleNavbar = this.toggleNavbar.bind(this);

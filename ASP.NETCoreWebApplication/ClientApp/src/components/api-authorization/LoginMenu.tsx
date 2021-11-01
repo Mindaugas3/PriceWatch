@@ -4,8 +4,25 @@ import { Link } from 'react-router-dom';
 import authService from './AuthorizeService';
 import { ApplicationPaths } from './ApiAuthorizationConstants';
 
-export class LoginMenu extends Component {
-    constructor(props) {
+interface LoginMenuProps {
+
+}
+
+interface LoginMenuState {
+    isAuthenticated: boolean;
+    userName: string | null
+}
+
+interface ViewPath {
+    pathname: string,
+    state: {
+        local: boolean
+    }
+}
+
+export class LoginMenu extends Component<LoginMenuProps, LoginMenuState> {
+    _subscription: number = 0;
+    constructor(props: LoginMenuProps) {
         super(props);
 
         this.state = {
@@ -27,7 +44,7 @@ export class LoginMenu extends Component {
         const [isAuthenticated, user] = await Promise.all([authService.isAuthenticated(), authService.getUser()])
         this.setState({
             isAuthenticated,
-            userName: user && user.name
+            userName: (user && user.name) ?? null
         });
     }
 
@@ -40,11 +57,11 @@ export class LoginMenu extends Component {
         } else {
             const profilePath = `${ApplicationPaths.Profile}`;
             const logoutPath = { pathname: `${ApplicationPaths.LogOut}`, state: { local: true } };
-            return this.authenticatedView(userName, profilePath, logoutPath);
+            return this.authenticatedView(userName!, profilePath, logoutPath);
         }
     }
 
-    authenticatedView(userName, profilePath, logoutPath) {
+    authenticatedView(userName: string, profilePath: string, logoutPath: ViewPath) {
         return (<Fragment>
             <NavItem>
                 <NavLink tag={Link} className="text-dark" to={profilePath}>Hello {userName}</NavLink>
@@ -56,7 +73,7 @@ export class LoginMenu extends Component {
 
     }
 
-    anonymousView(registerPath, loginPath) {
+    anonymousView(registerPath: string, loginPath: string) {
         return (<Fragment>
             <NavItem>
                 <NavLink tag={Link} className="text-dark" to={registerPath}>Register</NavLink>

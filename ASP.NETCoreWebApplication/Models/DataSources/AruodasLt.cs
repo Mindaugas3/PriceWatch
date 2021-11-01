@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ASP.NETCoreWebApplication.Interactors;
 using ASP.NETCoreWebApplication.Utils;
-using HtmlAgilityPack;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
 
 namespace ASP.NETCoreWebApplication.Models.DataSources
 {
@@ -274,27 +272,18 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             WebDriver wd = SeleniumScrapper.CreateFirefoxDriver();
             wd.Navigate().GoToUrl(this.BuildUrl());
             
-            //parse XML type with XPath
-            XPathParser aruodasParser = new XPathParser(
-                "//tr[contains(@class, 'list-row')]",
-                new List<string>
-                {
-                    "//div[contains(@class, 'obj-save')]",
-                    "//div[contains(@class, 'obj-unsave')]",
-                    "//div[contains(@class, 'icon-on-top-container')]",
-                    "//td[contains(@class, 'list-remember')]"
-                },
-                new Dictionary<string, string>
-                {
-                    ["price"] = "*//span[contains(@class, 'list-item-price')]",
-                    ["area"] = "*//td[contains(@class, 'list-AreaOverall')]",
-                    ["rooms"] = "*//td[contains(@class, 'list-RoomNum')]",
-                    ["floors"] = "*//td[contains(@class, 'list-Floors')]",
-                    ["image"] = "*//img/@src"
-                    //["url"] = "//a/@href"
-                }
-                );
-            List<Dictionary<string, string>> collectedData = aruodasParser.FeedHTML(wd.PageSource);
+            //hardcoding is bad lol
+            //TODO move hardcoded values to database
+
+            Dictionary<string, Tuple<string, string>> rawValues = new Dictionary<string, Tuple<string, string>>
+            {
+                ["price"] = Tuple.Create("span", "list-item-price"),
+                ["area"] = Tuple.Create("td", "list-AreaOverall"),
+                ["rooms"] = Tuple.Create("td", "list-RoomNum"),
+                ["floors"] = Tuple.Create("td", "list-Floors"),
+                //["url"] = "//a/@href"
+            };
+            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHTML(wd.PageSource, "tr", "list-row", rawValues, true);
 
             string rowResultHTML = collectedData.Select(entry => string.Join("\n", entry))
                 .Aggregate((x, y) => x + "\n" + y);

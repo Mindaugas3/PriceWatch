@@ -7,12 +7,27 @@ import { QueryParameterNames, LogoutActions, ApplicationPaths } from './ApiAutho
 // The main responsibility of this component is to handle the user's logout process.
 // This is the starting point for the logout process, which is usually initiated when a
 // user clicks on the logout button on the LoginMenu component.
-export class Logout extends Component {
-    constructor(props) {
+
+interface LogoutProps {
+    action: keyof typeof LogoutActions
+}
+
+interface LogoutState {
+    message: string | null,
+    isReady: boolean,
+    authenticated: boolean
+}
+
+interface IInternalState {
+    returnUrl: string
+}
+
+export class Logout extends Component<LogoutProps, LogoutState> {
+    constructor(props: LogoutProps) {
         super(props);
 
         this.state = {
-            message: undefined,
+            message: null,
             isReady: false,
             authenticated: false
         };
@@ -45,6 +60,7 @@ export class Logout extends Component {
     render() {
         const { isReady, message } = this.state;
         if (!isReady) {
+            //loading
             return <div></div>
         }
         if (!!message) {
@@ -64,7 +80,7 @@ export class Logout extends Component {
         }
     }
 
-    async logout(returnUrl) {
+    async logout(returnUrl: string) {
         const state = { returnUrl };
         const isauthenticated = await authService.isAuthenticated();
         if (isauthenticated) {
@@ -76,7 +92,7 @@ export class Logout extends Component {
                     await this.navigateToReturnUrl(returnUrl);
                     break;
                 case AuthenticationResultStatus.Fail:
-                    this.setState({ message: result.message });
+                    this.setState({ message: result.message ?? null });
                     break;
                 default:
                     throw new Error("Invalid authentication result status.");
@@ -98,7 +114,7 @@ export class Logout extends Component {
                 await this.navigateToReturnUrl(this.getReturnUrl(result.state));
                 break;
             case AuthenticationResultStatus.Fail:
-                this.setState({ message: result.message });
+                this.setState({ message: result.message ?? null });
                 break;
             default:
                 throw new Error("Invalid authentication result status.");
@@ -110,7 +126,7 @@ export class Logout extends Component {
         this.setState({ isReady: true, authenticated });
     }
 
-    getReturnUrl(state) {
+    getReturnUrl(state?: IInternalState) {
         const params = new URLSearchParams(window.location.search);
         const fromQuery = params.get(QueryParameterNames.ReturnUrl);
         if (fromQuery && !fromQuery.startsWith(`${window.location.origin}/`)) {
@@ -122,7 +138,7 @@ export class Logout extends Component {
             `${window.location.origin}${ApplicationPaths.LoggedOut}`;
     }
 
-    navigateToReturnUrl(returnUrl) {
-        return window.location.replace(returnUrl);
+    navigateToReturnUrl(returnUrl?: string | URL) {
+        return window.location.replace(returnUrl ?? "");
     }
 }

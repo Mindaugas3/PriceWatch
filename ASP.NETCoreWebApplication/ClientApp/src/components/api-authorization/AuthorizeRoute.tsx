@@ -4,10 +4,21 @@ import { Route, Redirect } from 'react-router-dom'
 import { ApplicationPaths, QueryParameterNames } from './ApiAuthorizationConstants'
 import authService from './AuthorizeService'
 
-export default class AuthorizeRoute extends Component {
-    constructor(props) {
-        super(props);
+interface AuthRouteProps {
+    children: JSX.Element | JSX.Element[] | string | number;
+    path: string
+}
 
+interface AuthRouteState {
+    ready: boolean,
+    authenticated: boolean
+}
+
+export default class AuthorizeRoute extends Component<AuthRouteProps, AuthRouteState> {
+    _subscription: number;
+    constructor(props: AuthRouteProps) {
+        super(props);
+        this._subscription = 0;
         this.state = {
             ready: false,
             authenticated: false
@@ -32,11 +43,11 @@ export default class AuthorizeRoute extends Component {
         if (!ready) {
             return <div></div>;
         } else {
-            const { component: Component, ...rest } = this.props;
+            const { children: Component, ...rest } = this.props;
             return <Route {...rest}
                 render={(props) => {
                     if (authenticated) {
-                        return <Component {...props} />
+                        return <>{Component}</>
                     } else {
                         return <Redirect to={redirectUrl} />
                     }

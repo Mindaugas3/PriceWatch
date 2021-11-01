@@ -10,10 +10,10 @@ export interface ColoredElementProps {
 
 export interface BlockProps {
     isFlex?: boolean;
-    height?: Number | String;
+    height?: number | string;
     collapse?: boolean;
     shrinkToContent?: boolean;
-    padding?: Number | String;
+    padding?: number | string;
     children?: ArbitraryOutputValue;
-    
+    bgcolor?: string
 }

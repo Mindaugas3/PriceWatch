@@ -138,7 +138,7 @@ export class Login extends Component<LoginProps, LoginState> {
         window.location.replace(redirectUrl);
     }
 
-    navigateToReturnUrl(returnUrl: string | URL) {
+    navigateToReturnUrl(returnUrl: string) {
         // It's important that we do a replace here so that we remove the callback uri with the
         // fragment containing the tokens from the browser history.
         window.location.replace(returnUrl);

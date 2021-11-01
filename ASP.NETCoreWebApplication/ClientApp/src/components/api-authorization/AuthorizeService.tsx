@@ -125,12 +125,12 @@ export class AuthorizeService {
             await this.userManager?.signoutPopup(this.createArguments());
             this.updateState(null);
             return this.success(state);
-        } catch (popupSignOutError: unknown) {
+        } catch (popupSignOutError) {
             console.log("Popup signout error: ", (popupSignOutError as Error).message);
             try {
                 await this.userManager?.signoutRedirect(this.createArguments(state));
                 return this.redirect();
-            } catch (redirectSignOutError: unknown) {
+            } catch (redirectSignOutError) {
                 console.log("Redirect signout error: ", redirectSignOutError);
                 return this.error((redirectSignOutError as Error).message);
             }
@@ -143,7 +143,7 @@ export class AuthorizeService {
             const response = await this.userManager?.signoutCallback(url);
             this.updateState(null);
             return this.success(response); // && response.data
-        } catch (error: unknown) {
+        } catch (error) {
             console.log(`There was an error trying to log out '${error}'.`);
             return this.error((error as Error).message);
         }

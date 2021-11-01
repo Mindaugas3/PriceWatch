@@ -8,10 +8,10 @@ const Block = (props: BlockProps) => {
             {width: shrinkToContent ? "max-content" : "100%", 
             height: props.height || "max-content", 
             backgroundColor: props.bgcolor || "rgb(228, 47, 228)",
-            minHeight: !isFlex && !collapse && "60vh",
+            minHeight: !isFlex && !collapse ? "60vh" : undefined,
             display: isFlex ? "flex" : "block",
-            flexDirection: isFlex && "row",
-            flexWrap: isFlex && "wrap",
+            flexDirection: isFlex ? "row" : undefined,
+            flexWrap: isFlex ? "wrap" : undefined,
             paddingTop: padding || 0,
             paddingBottom: padding || 0
         }}>{props.children}</div>

@@ -138,7 +138,7 @@ export class Logout extends Component<LogoutProps, LogoutState> {
             `${window.location.origin}${ApplicationPaths.LoggedOut}`;
     }
 
-    navigateToReturnUrl(returnUrl?: string | URL) {
+    navigateToReturnUrl(returnUrl?: string) {
         return window.location.replace(returnUrl ?? "");
     }
 }

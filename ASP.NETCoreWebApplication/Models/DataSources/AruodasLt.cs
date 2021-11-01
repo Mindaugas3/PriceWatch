@@ -283,7 +283,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 ["floors"] = Tuple.Create("td", "list-Floors"),
                 //["url"] = "//a/@href"
             };
-            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHTML(wd.PageSource, "tr", "list-row", rawValues, true);
+            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHTML(wd.PageSource, "tr", "list-row", rawValues, "---none");
 
             string rowResultHTML = collectedData.Select(entry => string.Join("\n", entry))
                 .Aggregate((x, y) => x + "\n" + y);

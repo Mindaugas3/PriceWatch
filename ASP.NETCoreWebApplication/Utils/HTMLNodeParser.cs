@@ -10,7 +10,7 @@ namespace ASP.NETCoreWebApplication.Utils
         //HTML - what you feed
         //ListItemDescendants / className - what you filter out (List)
         //itemsToChoose - what you filter out from
-        public static List<Dictionary<string, string>> FeedHTML(string HTML, string ListItemDescendants, string className, Dictionary<String, Tuple<String, String>> itemsToChoose, bool fetchImages)
+        public static List<Dictionary<string, string>> FeedHTML(string HTML, string ListItemDescendants, string className, Dictionary<String, Tuple<String, String>> itemsToChoose, string? imageClassName = null)
         {
             List<Dictionary<string, string>> AggregateData = new List<Dictionary<string, string>>();
             HtmlDocument htmlDocument = new HtmlDocument();
@@ -41,9 +41,14 @@ namespace ASP.NETCoreWebApplication.Utils
                    singleDataItem[key] = data;
                 }
 
-                if (fetchImages)
+                if (imageClassName != null)
                 {
                     //image fetch logic
+                    string imageSrc = childNode?.Descendants("img")
+                        ?.Where(img => img.GetAttributeValue("class", "---none").Equals(imageClassName))
+                        ?.FirstOrDefault()
+                        ?.GetAttributeValue("src", "");
+                    singleDataItem["image"] = imageSrc;
                 }
 
                 if (!skipEntry)

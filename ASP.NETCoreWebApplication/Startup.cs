@@ -26,9 +26,11 @@ namespace ASP.NETCoreWebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            string conn = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<PriceWatchContext>(options =>
+                options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
+            
+            
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();

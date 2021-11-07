@@ -47,6 +47,9 @@ export class NavMenu extends Component<any, INavMenuState> {
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
                 </NavItem>
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/Housing">Housing</NavLink>
+                </NavItem>
                 <LoginMenu>
                 </LoginMenu>
               </ul>

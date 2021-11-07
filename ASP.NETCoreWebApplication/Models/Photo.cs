@@ -1,19 +1,20 @@
-﻿using System.Net;
-using System.Runtime.InteropServices;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ASP.NETCoreWebApplication.Models
 {
     public class Photo
     {
-        private IPAddress href;
-        private int width;
-        private int height;
+        [Key]
+        public int Id { get; set; }
+        [Required]
+        public string href { get; set; }
+        public int Item_id { get; set; }
+        public int size_w { get; set; }
+        public int size_h { get; set; }
 
-        public Photo(IPAddress href, int width, int height)
+        public Photo()
         {
-            this.href = href;
-            this.width = width;
-            this.height = height;
+            
         }
     }
 }

@@ -7,10 +7,41 @@ namespace ASP.NETCoreWebApplication.Utils
 {
     public class HTMLNodeParser
     {
+
+        public enum ParserFlags
+        {
+            Image,
+            Hyperlink,
+            Script,
+            HtmlElementClassName,
+            HtmlElementId
+        }
+
+        public class ParseOptions
+        {
+            private ParserFlags pf { get; }
+            private string attribute { get; }
+
+            public ParseOptions(ParserFlags pf, string attribName)
+            {
+                this.pf = pf;
+                this.attribute = attribName;
+            }
+
+            public string getAttrName()
+            {
+                return this.attribute;
+            }
+
+            public ParserFlags getParserFlags()
+            {
+                return this.pf;
+            }
+        }
         //HTML - what you feed
         //ListItemDescendants / className - what you filter out (List)
         //itemsToChoose - what you filter out from
-        public static List<Dictionary<string, string>> FeedHTML(string HTML, string ListItemDescendants, string className, Dictionary<String, Tuple<String, String>> itemsToChoose, string? imageClassName = null)
+        public static List<Dictionary<string, string>> FeedHTML(string HTML, string ListItemDescendants, string className, Dictionary<String, Tuple<String, ParseOptions>> itemsToChoose)
         {
             List<Dictionary<string, string>> AggregateData = new List<Dictionary<string, string>>();
             HtmlDocument htmlDocument = new HtmlDocument();
@@ -22,33 +53,65 @@ namespace ASP.NETCoreWebApplication.Utils
             
             foreach (var childNode in descendants)
             {
+                //Console.Write(childNode.InnerHtml);
                 bool skipEntry = false;
                 Dictionary<string, string> singleDataItem = new Dictionary<string, string>();
                 //LIST ENTRY
+                // Console.WriteLine(childNode.InnerHtml);
                 foreach (var key in itemsToChoose.Keys)
                 {
                    //DATA COLLECTION
                    string selectorTagName = itemsToChoose[key].Item1;
-                   string selectorClassName = itemsToChoose[key].Item2;
-                   string data = childNode?.Descendants(selectorTagName)
-                       ?.Where(node => node.GetAttributeValue("class", "").Equals(selectorClassName))?.FirstOrDefault()
-                       ?.InnerText?.Replace(" ", "").Replace("\n", "").Replace("\r", "");
+                   ParserFlags pf = itemsToChoose[key].Item2.getParserFlags();
+                   string selectorClassName = itemsToChoose[key].Item2.getAttrName();
+                   string data = "";
+                   switch (pf)
+                   {
+                       case ParserFlags.Hyperlink: 
+                       {
+                           data = childNode?.Descendants(selectorTagName)
+                               ?.Where(node => node.GetAttributeValue("class", "").Contains(selectorClassName))?.FirstOrDefault()
+                               ?.GetAttributeValue("href", "");
+                           break;
+                       }
+                       case ParserFlags.Image:
+                       {
+                           data = childNode?.Descendants("img")
+                               ?.Where(img => img.GetAttributeValue("class", "---none").Equals(selectorClassName))
+                               ?.FirstOrDefault()
+                               ?.GetAttributeValue("src", "");
+                           break;
+                       }
+                       case ParserFlags.Script:
+                       {
+
+                           break;
+                       }
+                       case ParserFlags.HtmlElementId:
+                       {
+                           data = childNode?.Descendants(selectorTagName)
+                               ?.Where(node => node.GetAttributeValue("id", "").Contains(selectorClassName))?.FirstOrDefault()
+                               ?.InnerText;
+                           break;
+                       }
+                       case ParserFlags.HtmlElementClassName:
+                       {
+                           data = childNode?.Descendants(selectorTagName)
+                               ?.Where(node => node.GetAttributeValue("class", "").Contains(selectorClassName))?.FirstOrDefault()
+                               ?.InnerText;
+                           break;
+                       }
+                   }
+                   if (key == "title")
+                   {
+                       Console.WriteLine(data);
+                   }
                    //DATA ENTRY
                    if (data == null)
                    {
                        skipEntry = true;
                    }
                    singleDataItem[key] = data;
-                }
-
-                if (imageClassName != null)
-                {
-                    //image fetch logic
-                    string imageSrc = childNode?.Descendants("img")
-                        ?.Where(img => img.GetAttributeValue("class", "---none").Equals(imageClassName))
-                        ?.FirstOrDefault()
-                        ?.GetAttributeValue("src", "");
-                    singleDataItem["image"] = imageSrc;
                 }
 
                 if (!skipEntry)

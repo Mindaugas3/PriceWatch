@@ -21,7 +21,6 @@ export class FetchData extends Component<{}, IFetchDataState> {
 
   static renderForecastsTable(forecasts: any[]) {
     return (
-      <Layout>
         <table className='table table-striped' aria-labelledby="tabelLabel">
           <thead>
             <tr>
@@ -42,7 +41,6 @@ export class FetchData extends Component<{}, IFetchDataState> {
             )}
           </tbody>
         </table>
-      </Layout>
     );
   }
 

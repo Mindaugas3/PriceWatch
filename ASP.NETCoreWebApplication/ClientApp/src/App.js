@@ -10,6 +10,7 @@ import { ApplicationPaths } from './components/api-authorization/ApiAuthorizatio
 import Admin from './components/admin/index';
 
 import './custom.css'
+import Housing from "./pages/Housing";
 
 export default class App extends Component {
   static displayName = App.name;
@@ -20,6 +21,7 @@ export default class App extends Component {
         <Route path='/admin' component={Admin} />
         <Route exact path='/' component={Home} />
         <Route path='/counter' component={Counter} />
+        <Route path='/Housing' component={Housing} />
         <AuthorizeRoute path='/fetch-data' component={FetchData} />
         <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
       </React.Fragment>

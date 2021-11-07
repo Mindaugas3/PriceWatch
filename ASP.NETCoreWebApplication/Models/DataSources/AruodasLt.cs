@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using ASP.NETCoreWebApplication.Interactors;
 using ASP.NETCoreWebApplication.Utils;
@@ -264,7 +265,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             return location;
         }
 
-        public string Scrap(int depth = 4)
+        public HousingObject[] Scrap(PriceWatchContext dbc, int depth = 4)
         {
             
             if(depth < 1) throw new ArgumentException("depth cannot be zero or negative");
@@ -275,20 +276,89 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             //hardcoding is bad lol
             //TODO move hardcoded values to database
 
-            Dictionary<string, Tuple<string, string>> rawValues = new Dictionary<string, Tuple<string, string>>
+            Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>> rawValues = new Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>>
             {
-                ["price"] = Tuple.Create("span", "list-item-price"),
-                ["area"] = Tuple.Create("td", "list-AreaOverall"),
-                ["rooms"] = Tuple.Create("td", "list-RoomNum"),
-                ["floors"] = Tuple.Create("td", "list-Floors"),
-                //["url"] = "//a/@href"
-            };
-            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHTML(wd.PageSource, "tr", "list-row", rawValues, "---none");
+                ["price"] = Tuple.Create("span", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName,"list-item-price")),
+                ["area"] = Tuple.Create("td", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName,"list-AreaOverall")),
+                ["rooms"] = Tuple.Create("td", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "list-RoomNum")),
+                ["floors"] = Tuple.Create("td", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "list-Floors")),
+                ["location"] = Tuple.Create("h3", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "")),
+                ["url"] = Tuple.Create("a", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.Hyperlink, "")),
+                ["img"] = Tuple.Create("img", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.Image, "---none")),
 
-            string rowResultHTML = collectedData.Select(entry => string.Join("\n", entry))
-                .Aggregate((x, y) => x + "\n" + y);
+            };
+            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHTML(wd.PageSource, "tr", "list-row", rawValues);
+
+            foreach (Dictionary<string,string> entry in collectedData)
+            {
+                var titleAndDescription = deepScrap(wd, entry["url"]);
+                entry["title"] = titleAndDescription["title"];
+                entry["description"] = titleAndDescription["description"];
+            }
+
+            List<HousingObject> databaseEntries = new List<HousingObject>();
+            foreach (var entry in collectedData)
+            {
+                HousingObject obj = toDBO(entry);
+                databaseEntries.Add(obj);
+            }
+            PWDatabaseInitializer.InsertMany(dbc, databaseEntries);
+            wd.Close();
+            return databaseEntries.ToArray();
+        }
+
+        //atidaro Aruodas.lt skelbimo puslapi ir paima duomenis is vidaus
+        public static Dictionary<string, string> deepScrap(WebDriver wd, string url)
+        {
+            wd.Navigate().GoToUrl(url);
+            Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>> rawValues =
+                new Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>>
+                {
+                    ["title"] = Tuple.Create("h1", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "obj-header-text")),
+                    ["description"] = Tuple.Create("div", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementId, "collapsedText"))
+                };
+            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHTML(wd.PageSource, "div", "obj-cont", rawValues);
+            return collectedData.First();
+        }
+
+        public HousingObject toDBO(Dictionary<string, string> insertable)
+        {
+            //parse price
+            string price = insertable["price"].Replace(" ", "").Replace("\n", "").Replace("\r", "");
+            string currency = price.Substring(price.Length - 1); //last character
+
+            int priceAmount = Int32.Parse(new string(price.Where(c => char.IsDigit(c)).ToArray()));
             
-            return rowResultHTML;
+            //parse floors
+            var floors = insertable["floors"].Replace(" ", "").Replace("\n", "").Replace("\r", "").Split("/");
+            int currentFloor = Int32.Parse(floors[0]);
+            int maxFloor = Int32.Parse(floors[1]);
+            
+            //parse rooms and area
+            Console.WriteLine(insertable["area"].Replace(" ", "").Replace("\n", "").Replace("\r", ""));
+            var rooms = Int32.Parse(insertable["rooms"].Replace(" ", "").Replace("\n", "").Replace("\r", ""));
+            var area = (int) float.Parse(insertable["area"].Replace(" ", "").Replace("\n", "").Replace("\r", "")
+                , CultureInfo.InvariantCulture);
+
+            //parse location
+            var location = insertable["location"].Replace("\n", " ").Replace("\r", " ");
+            HousingObject dbObject = new HousingObject
+            {
+                Source_id = 1,
+                title = insertable["title"],
+                url = insertable["url"],
+                price = priceAmount,
+                location = location.Trim(),
+                timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds(),
+                Currency = currency,
+                area = area,
+                rooms = Int32.Parse(insertable["rooms"].Trim()),
+                floorsMax = maxFloor,
+                floorsThis = currentFloor,
+                description = insertable["description"],
+                imgUrl = insertable["img"]
+            };
+            return dbObject;
         }
     }
 }

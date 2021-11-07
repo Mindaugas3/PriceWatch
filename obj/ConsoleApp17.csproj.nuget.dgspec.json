@@ -1,35 +1,29 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Mantixas\\source\\repos\\pigu scrapper\\ConsoleApp17\\ConsoleApp17.csproj": {}
+    "C:\\Users\\Mindaugas\\RiderProjects\\PriceWatch\\ConsoleApp17.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Mantixas\\source\\repos\\pigu scrapper\\ConsoleApp17\\ConsoleApp17.csproj": {
+    "C:\\Users\\Mindaugas\\RiderProjects\\PriceWatch\\ConsoleApp17.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mantixas\\source\\repos\\pigu scrapper\\ConsoleApp17\\ConsoleApp17.csproj",
+        "projectUniqueName": "C:\\Users\\Mindaugas\\RiderProjects\\PriceWatch\\ConsoleApp17.csproj",
         "projectName": "ConsoleApp17",
-        "projectPath": "C:\\Users\\Mantixas\\source\\repos\\pigu scrapper\\ConsoleApp17\\ConsoleApp17.csproj",
-        "packagesPath": "C:\\Users\\Mantixas\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mantixas\\source\\repos\\pigu scrapper\\ConsoleApp17\\obj\\",
+        "projectPath": "C:\\Users\\Mindaugas\\RiderProjects\\PriceWatch\\ConsoleApp17.csproj",
+        "packagesPath": "C:\\Users\\Mindaugas\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Mindaugas\\RiderProjects\\PriceWatch\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Mantixas\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\Mindaugas\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netcoreapp3.1": {
-            "targetAlias": "netcoreapp3.1",
             "projectReferences": {}
           }
         },
@@ -41,11 +35,20 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
           "dependencies": {
             "HtmlAgilityPack": {
               "target": "Package",
               "version": "[1.11.37, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.11, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[5.0.2, )"
             }
           },
           "imports": [
@@ -58,18 +61,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[3.1.13, 3.1.13]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.104\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Users\\Mindaugas\\.dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,18 +1,31 @@
-﻿namespace ASP.NETCoreWebApplication.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ASP.NETCoreWebApplication.Models
 {
     public class HousingObject
     {
-        private readonly int price;
-        private readonly int area;
-        private readonly string destinationUrl;
-        private readonly string imgUrl;
+        [Key]
+        public int Id { get; set; }
+        [Required] public int Source_id { get; set; }
+        [Required] public string title { get; set; }
+        [Required] public string url { get; set; } //unique
+        [Required] public float price { get; set; }
+        [Required] public string location { get; set; }
 
-        public HousingObject(int price, int area, string destinationUrl, string imgUrl)
+        public long timestamp { get; set; }
+        public string Currency { get; set; }
+        
+        public int rooms { get; set; }
+
+        public int area { get; set; }
+        [Required] public int floorsMax { get; set; }
+        [Required] public int floorsThis { get; set; }
+        [Required] public string description { get; set; }
+        public string imgUrl { get; set; }
+
+        public HousingObject()
         {
-            this.price = price;
-            this.area = area;
-            this.destinationUrl = destinationUrl;
-            this.imgUrl = imgUrl;
+            
         }
     }
 }

@@ -57,7 +57,6 @@ namespace ASP.NETCoreWebApplication.Utils
                 bool skipEntry = false;
                 Dictionary<string, string> singleDataItem = new Dictionary<string, string>();
                 //LIST ENTRY
-                // Console.WriteLine(childNode.InnerHtml);
                 foreach (var key in itemsToChoose.Keys)
                 {
                    //DATA COLLECTION
@@ -101,10 +100,6 @@ namespace ASP.NETCoreWebApplication.Utils
                                ?.InnerText;
                            break;
                        }
-                   }
-                   if (key == "title")
-                   {
-                       Console.WriteLine(data);
                    }
                    //DATA ENTRY
                    if (data == null)

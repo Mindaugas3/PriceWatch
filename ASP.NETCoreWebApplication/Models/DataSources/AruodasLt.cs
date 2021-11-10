@@ -131,38 +131,18 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
         {
         }
     }
-
-    public enum Municipality
-    {
-        //TODO pull from API
-    }
-
-    public enum City
-    {
-        //TODO pull from API
-    }
-
-    public enum District
-    {
-        //TODO pull from API
-    }
+    
     public class AruodasLt
     {
         private readonly HousingType housingType;
-        private readonly Municipality? municipality;
-        private readonly City? city;
-        private readonly District? distr;
         private readonly PriceRange priceRange;
         private readonly RoomNumberDescriptor rooms;
         private readonly AreaDescriptor area; //kvadratiniai metrai
         private readonly string? optionalSearch;
-        public AruodasLt(HousingType type, Municipality? mun, City? city, District? district, RoomNumberDescriptor rooms, AreaDescriptor area, PriceRange priceRange, string? optionalSearchText)
+        public AruodasLt(HousingType type, RoomNumberDescriptor rooms, AreaDescriptor area, PriceRange priceRange, string? optionalSearchText)
         {
             //assign
             this.housingType = type;
-            this.municipality = mun;
-            this.city = city;
-            this.distr = district;
             this.rooms = rooms;
             this.priceRange = priceRange;
             this.area = area;
@@ -236,7 +216,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             }
 
             AreaDescriptor.RoomRangeType areaRangeType = this.area.GetRangeType();
-            if (rangeType == AreaDescriptor.RoomRangeType.Exact)
+            if (areaRangeType == AreaDescriptor.RoomRangeType.Exact)
             {
                 location += "FAreaOverAllMin=";
                 location += this.area.GetExactly().ToString();
@@ -248,10 +228,10 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             else
             {
                 location += "FAreaOverAllMin=";
-                location += this.rooms.GetMin().ToString();
+                location += this.area.GetMin().ToString();
                 location += "&";
                 location += "FAreaOverAllMax=";
-                location += this.rooms.GetMax().ToString();
+                location += this.area.GetMax().ToString();
                 location += "&";
             }
 
@@ -261,6 +241,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 location += optionalSearch;
             }
 
+            ConsoleWriter.WriteHttpGetScrappers(location);
             //remove last & from URLs
             return location;
         }
@@ -302,6 +283,13 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 HousingObject obj = toDBO(entry);
                 databaseEntries.Add(obj);
             }
+
+            //remove dublicates from UNIQUE keys before DB inserts
+            databaseEntries = databaseEntries
+                .GroupBy(entry => entry.url)
+                .Select(g => g.First())
+                .ToList();
+            
             PWDatabaseInitializer.InsertMany(dbc, databaseEntries);
             wd.Close();
             return databaseEntries.ToArray();
@@ -310,6 +298,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
         //atidaro Aruodas.lt skelbimo puslapi ir paima duomenis is vidaus
         public static Dictionary<string, string> deepScrap(WebDriver wd, string url)
         {
+            ConsoleWriter.WriteHttpGetScrappers(url);
             wd.Navigate().GoToUrl(url);
             Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>> rawValues =
                 new Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>>
@@ -335,7 +324,6 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             int maxFloor = Int32.Parse(floors[1]);
             
             //parse rooms and area
-            Console.WriteLine(insertable["area"].Replace(" ", "").Replace("\n", "").Replace("\r", ""));
             var rooms = Int32.Parse(insertable["rooms"].Replace(" ", "").Replace("\n", "").Replace("\r", ""));
             var area = (int) float.Parse(insertable["area"].Replace(" ", "").Replace("\n", "").Replace("\r", "")
                 , CultureInfo.InvariantCulture);

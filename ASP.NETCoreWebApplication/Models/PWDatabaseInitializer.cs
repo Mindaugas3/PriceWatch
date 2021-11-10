@@ -20,7 +20,7 @@ namespace ASP.NETCoreWebApplication.Models
         {
             foreach (var obj in hList)
             {
-                var urlsUnique = context.HousingObjects.Select(c => c.url).ToArray();
+                var urlsUnique = context.HousingObjects.Select(c => c.url).ToHashSet();
                 if(!urlsUnique.Contains(obj.url))
                 {
                     context.HousingObjects.Add(obj);              

@@ -6,6 +6,7 @@ import { FetchData } from './components/FetchData';
 import { Counter } from './components/Counter';
 import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
 import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
+import { Helmet } from "react-helmet";
 import { ApplicationPaths } from './components/api-authorization/ApiAuthorizationConstants';
 import Admin from './components/admin/index';
 
@@ -15,9 +16,12 @@ import Housing from "./pages/Housing";
 export default class App extends Component {
   static displayName = App.name;
 
-  render () {
+    render () {
     return (
       <React.Fragment>
+        <Helmet>
+            <script src="https://kit.fontawesome.com/a076d05399.js" crossOrigin="anonymous"></script>
+        </Helmet>
         <Route path='/admin' component={Admin} />
         <Route exact path='/' component={Home} />
         <Route path='/counter' component={Counter} />

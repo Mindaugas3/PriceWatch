@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ASP.NETCoreWebApplication.Models;
 using ASP.NETCoreWebApplication.Models.DataSources;
 using ASP.NETCoreWebApplication.Utils;
@@ -16,16 +15,6 @@ namespace ASP.NETCoreWebApplication.Controllers
     public class HousingItemsController : ControllerBase
     {
         private readonly PriceWatchContext pc;
-        
-        private static string ParseKeys(IEnumerable<KeyValuePair<string, StringValues>> values)
-        {
-            var sb = new StringBuilder();
-            foreach (var value in values)
-            {
-                sb.AppendLine(value.Key + " = " + string.Join(", ", value.Value));
-            }
-            return sb.ToString();
-        }
 
         public HousingItemsController(PriceWatchContext context)
         {
@@ -52,17 +41,19 @@ namespace ASP.NETCoreWebApplication.Controllers
 
             //use LINQ instead of WHERE
             returnObject = this.pc.HousingObjects.ToArray();
-
-            //TODO ROOMS NOT PRESENT IN DATABASE
-            // if (param["roomsMin"] != StringValues.Empty && param["roomsMax"] != StringValues.Empty)
-            // {
-            //     returnObject = returnObject.Where()
-            // }
-
-            if (param["floors"] != StringValues.Empty)
+            
+            if (param["roomsMin"] != StringValues.Empty && param["roomsMax"] != StringValues.Empty)
             {
-                returnObject = returnObject.Where(r => r.floorsThis == Int32.Parse(param["floors"]));
+                var roomsMin = Int32.Parse(param["roomsMin"]);
+                var roomsMax = Int32.Parse(param["roomsMax"]);
+
+                returnObject = returnObject.Where(r => r.rooms <= roomsMax && r.rooms >= roomsMin);
             }
+
+            // if (param["floors"] != StringValues.Empty)
+            // {
+            //     returnObject = returnObject.Where(r => r.floorsThis == Int32.Parse(param["floors"]));
+            // }
             
             if (param["priceMin"] != StringValues.Empty)
             {
@@ -76,7 +67,7 @@ namespace ASP.NETCoreWebApplication.Controllers
             
             if (param["searchKey"] != StringValues.Empty)
             {
-                returnObject = returnObject.Where(r => r.description.Contains(param["searchKey"]));
+                returnObject = returnObject.Where(r => r.title.Contains(param["searchKey"]));
             }
 
             return returnObject;
@@ -86,28 +77,63 @@ namespace ASP.NETCoreWebApplication.Controllers
         public IEnumerable<HousingObject> Get()
         {
             Console.Write("GET HousingItemsController");
+            
+            var param = this.Request.Query;
+            
             DefaultParameters aruodasDefault = new DefaultParameters(new Dictionary<string, dynamic>
             {
                 ["type"] = HousingType.BuyFlat,
-                ["mun"] = null,
-                ["city"] = null,
-                ["district"] = null,
-                ["rooms"] = new RoomNumberDescriptor(3),
-                ["area"] = new AreaDescriptor(1, 150),
+                ["rooms"] = new RoomNumberDescriptor(1, 5),
+                ["area"] = new AreaDescriptor(1, 150), //unused
                 ["priceRange"] = new PriceRange(0, 180000),
                 ["optionalSearchText"] = null
             });
+
+            RoomNumberDescriptor? rnd = null;
+            PriceRange? prc = null;
+
+            if (param["roomsMin"] != StringValues.Empty && param["roomsMax"] != StringValues.Empty)
+            {
+                var roomsMin = Int32.Parse(param["roomsMin"]);
+                var roomsMax = Int32.Parse(param["roomsMax"]);
+
+                if (roomsMax > roomsMin)
+                {
+                    rnd = new RoomNumberDescriptor(roomsMin, roomsMax);                    
+                }
+
+                if (roomsMax == roomsMin)
+                {
+                    rnd = new RoomNumberDescriptor(roomsMax);
+                }
+            }
+
+            //TODO NOT IMPLEMENTED
+            // if (param["floors"] != StringValues.Empty)
+            // {
+            //     returnObject = returnObject.Where(r => r.floorsThis == Int32.Parse(param["floors"]));
+            // }
             
-            var param = this.Request.Query;
+            if (param["priceMin"] != StringValues.Empty && param["priceMax"] != StringValues.Empty)
+            {
+                prc = new PriceRange(Int32.Parse(param["priceMin"]), Int32.Parse(param["priceMax"]));
+            }
+            
+            if (param["priceMin"] == StringValues.Empty && param["priceMax"] != StringValues.Empty)
+            {
+                prc = new PriceRange(0, Int32.Parse(param["priceMax"]));
+            }
+            
+            if (param["priceMin"] != StringValues.Empty && param["priceMax"] == StringValues.Empty)
+            {
+                prc = new PriceRange(Int32.Parse(param["priceMax"]), Int32.MaxValue);
+            }
 
             var aruodasData = new AruodasLt(
                 aruodasDefault["type"],
-                aruodasDefault["mun"],
-                aruodasDefault["city"],
-                aruodasDefault["district"],
-                aruodasDefault["rooms"],
+                (rnd != null) ? rnd : aruodasDefault["rooms"],
                 aruodasDefault["area"],
-                aruodasDefault["priceRange"],
+                (prc != null)? prc : aruodasDefault["priceRange"],
                 (param["searchKey"] != StringValues.Empty)? param["searchKey"] : aruodasDefault["optionalSearchText"]
             ).Scrap(this.pc, 5);
 

@@ -47,7 +47,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
         private static List<string> Rating = new List<string>();
         private static List<string> CategoryForDB = new List<string>();
         private static List<string> PictureURL = new List<string>();
-        static async Task Main(string[] args, PriceWatchContext dbc)
+        static async Task PiguLT(string[] args, PriceWatchContext dbc)
         {
 
             await GetCategories(CategoryURL);

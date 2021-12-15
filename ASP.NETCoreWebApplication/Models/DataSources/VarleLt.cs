@@ -8,15 +8,16 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ASP.NETCoreWebApplication.Interactors;
 using ASP.NETCoreWebApplication.Utils;
+using System.Globalization;
 
 namespace ASP.NETCoreWebApplication.Models.DataSources
 {
 
     class VarleLt
     {
-        public class ItemObject
+        public class ItemsObject
         {
-            public ItemObject(string category, string title, string url, string price, string description)
+            public ItemsObject(string category, string title, string url, string price, string description)
             {
                 this.category = category;
                 this.title = title;
@@ -24,19 +25,22 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 this.price = price;
                 this.description = description;
             }
+
             public string category;
             public string title;
             public string url;
             public string price;
+            public string description;
         }
-    private static List<string> Links = new List<string>();
+        private static List<ItemsObject> Items = new List<ItemsObject>();
+        private static List<string> Links = new List<string>();
         private static List<string> Name = new List<string>();
         private static List<string> Price = new List<string>();
         private static List<string> Rating = new List<string>();
         private static List<string> categories = new List<string>();
         private static List<string> subCategories = new List<string>();
         private static List<string> CategoriesForDB = new List<string>();
-        static void VarleL(string[] args)
+        static void VarleLT(string[] args, PriceWatchContext dbc)
         {
             Category CategoryList = new Category();
 
@@ -67,11 +71,20 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 {
                     Console.WriteLine(e.Message);
                 }
+
                 
             }
 
             Console.WriteLine("Done.");
             PrintData();
+            List<ItemObject> databaseEntries = new List<ItemObject>();
+            foreach (ItemsObject I in Items)
+            {
+                ItemObject obj = DBObjects(I);
+                databaseEntries.Add(obj);
+            }
+
+            PWDatabaseInitializer.InsertItems(dbc, databaseEntries);
             Console.ReadLine();
         }
         private static void PrintData()
@@ -94,6 +107,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 Console.WriteLine("Category: " + CategoriesForDB[i]);
                 Console.WriteLine("Link: " + Links[i]);
                 Console.WriteLine("___________________________________");
+                Items.Add(new ItemsObject(CategoriesForDB[i], Name[i], Links[i], Price[i], Rating[i]));
             }
         }
         private static async Task GetSubCategories(string category, List<string>subcat, Category c)
@@ -272,6 +286,29 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
 
             }
         }
-      
+        public static ItemObject DBObjects(ItemsObject I)
+        {
+            double value;
+            I.price.Replace(",", ".");
+            double.TryParse(I.price, NumberStyles.Any, CultureInfo.InvariantCulture, out value);
+            ItemObject dbObject = new ItemObject
+            {
+                Source_id = 2,
+                category = I.category,
+                title = I.title,
+                url = I.url,
+                price = Convert.ToSingle(value),
+                shipping = Convert.ToSingle(0),
+                shippingDuration = 0,
+                Currency_id = 0,
+                returns = "",
+                weight = Convert.ToSingle(0),
+                description = I.description,
+                img = null
+
+            };
+            return dbObject;
+        }
+
     }
 }

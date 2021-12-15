@@ -30,5 +30,16 @@ namespace ASP.NETCoreWebApplication.Models
 
             context.SaveChanges();
         }
+        public static void InsertItems(PriceWatchContext context, List<ItemObject> IList)
+        {
+            foreach(var obj in IList)
+            {
+                var urlsUnique = context.ItemObjects.Select(c => c.url).ToArray();
+                if (!urlsUnique.Contains(obj.url))
+                {
+                    context.ItemObjects.Add(obj);
+                }
+            }
+        }
     }
 }

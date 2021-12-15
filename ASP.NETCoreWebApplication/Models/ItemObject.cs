@@ -9,7 +9,7 @@ namespace ASP.NETCoreWebApplication.Models
         public int Id { get; set; }
         [Required]
         public int Source_id { get; set; }
-        public Category category { get; set; }
+        public string category { get; set; }
         [Required]
         public string title { get; set; }
         [Required]

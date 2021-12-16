@@ -6,30 +6,113 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ASP.NETCoreWebApplication.Interactors;
+using ASP.NETCoreWebApplication.Utils;
+using System.Globalization;
 
-namespace VarleLt
+namespace ASP.NETCoreWebApplication.Models.DataSources
 {
+
     class VarleLt
     {
-        static void Main(string[] args)
-        {          
-            List<string> categories = new List<string>();
-            List<string> subCategories = new List<string>();
+        public class ItemsObject
+        {
+            public ItemsObject(string category, string title, string url, string price, string description)
+            {
+                this.category = category;
+                this.title = title;
+                this.url = url;
+                this.price = price;
+                this.description = description;
+            }
+
+            public string category;
+            public string title;
+            public string url;
+            public string price;
+            public string description;
+        }
+        private static List<ItemsObject> Items = new List<ItemsObject>();
+        private static List<string> Links = new List<string>();
+        private static List<string> Name = new List<string>();
+        private static List<string> Price = new List<string>();
+        private static List<string> Rating = new List<string>();
+        private static List<string> categories = new List<string>();
+        private static List<string> subCategories = new List<string>();
+        private static List<string> CategoriesForDB = new List<string>();
+        static void VarleLT(string[] args, PriceWatchContext dbc)
+        {
+            Category CategoryList = new Category();
+
+
+            //subCategories.Add("televizoriai/");
+            Console.WriteLine("Getting categories");
             GetCategories(categories).Wait();
+            Console.WriteLine("Getting subCategories");
             foreach(string cat in categories)
             {
-                GetSubCategories(cat, subCategories).Wait();
+                if (cat.Equals("/turizmas/") || cat.Equals("/apple/") || cat.Equals("/ismanieji-namai/") || cat.Equals("/mi-shop/") || cat.Equals("/esporto-zaidimu-gaming-iranga/") || cat.Equals("/loreal/") || cat.Equals("/jura/") || cat.Equals("/samsung/") || cat.Equals(" / sokoladas - saldumynai / "))
+                {
+                }
+                else
+                {
+                    GetSubCategories(cat, subCategories, CategoryList).Wait();
+                }
             }
-            foreach (var cat in subCategories)
+            foreach (var cat in subCategories.Take(1))
             {
-                Scrap(cat);
+                Console.WriteLine("Rasta galine kategorija:  " + cat);
+                // GetLastPage(cat);
+                try
+                {
+                    Scrap2(Links, cat).Wait();
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+
+                
             }
+
             Console.WriteLine("Done.");
+            PrintData();
+            List<ItemObject> databaseEntries = new List<ItemObject>();
+            foreach (ItemsObject I in Items)
+            {
+                ItemObject obj = DBObjects(I);
+                databaseEntries.Add(obj);
+            }
+
+            PWDatabaseInitializer.InsertItems(dbc, databaseEntries);
             Console.ReadLine();
         }
-        private static async Task GetSubCategories(string category, List<string>subcat)
+        private static void PrintData()
         {
-            Console.WriteLine("Getting subcategories from: " + category);
+            for (int i = 0; i < Links.Count(); i++)
+            {
+                Rating[i] = Regex.Replace(Rating[i], @"\s+", " ");
+                int index = Rating[i].IndexOf("(");
+                if (index >= 0)
+                {
+                    Rating[i] = Rating[i].Substring(0, index);
+                }
+
+                Name[i] = Name[i].Replace("&quot", "'");
+                Price[i] = Price[i].Replace(" ", "");
+                Price[i] = Price[i].Replace("€", "");
+                Console.WriteLine(i + ".  Name: " + Name[i]);
+                Console.WriteLine("Price: " + Price[i]);
+                Console.WriteLine("Rating: " + Rating[i]);
+                Console.WriteLine("Category: " + CategoriesForDB[i]);
+                Console.WriteLine("Link: " + Links[i]);
+                Console.WriteLine("___________________________________");
+                Items.Add(new ItemsObject(CategoriesForDB[i], Name[i], Links[i], Price[i], Rating[i]));
+            }
+        }
+        private static async Task GetSubCategories(string category, List<string>subcat, Category c)
+        {
+          
             var url = "https://www.varle.lt/" + category;
             var httpClient = new HttpClient();
             var html = await httpClient.GetStringAsync(url);
@@ -44,9 +127,8 @@ namespace VarleLt
             var Griditems = htmlDocument.DocumentNode.Descendants("a")
               .Where(node => node.GetAttributeValue("class", "")
               .Equals("title-category")).ToList();
-            if (Griditems.Count() == 0)
+            if (Griditems.Count() == 0) // Check if the category has subcategories
             {
-                Console.WriteLine("No sub categories found, adding the category as a sub one.");
                 subcat.Add(category);
             }
             else
@@ -54,10 +136,12 @@ namespace VarleLt
                 foreach (var v in Griditems)
                 {
                     subcat.Add(v.GetAttributeValue("href", ""));
-                    Console.WriteLine("Kategorija:   " + category + "   ||   SubKategorija:   " + v.GetAttributeValue("href", "").ToString());
+                    string name = v.GetAttributeValue("href", "").ToString();
+                    c.name = v.GetAttributeValue("href", "").ToString();
+                    c.href = "https://www.varle.lt" + v.GetAttributeValue("href", "").ToString();
+                 
                 }
             }
-            Console.WriteLine();
            
         }
         private static async Task GetCategories(List<string> cat)
@@ -78,22 +162,61 @@ namespace VarleLt
 
             foreach (var v in Griditems)
             {
+
                 cat.AddRange(v.Descendants("a").Select(node => node.GetAttributeValue("href", String.Empty)).ToList());
             }            
-            foreach(string str in cat)
-            {
-                Console.WriteLine(str);
-            }
         }
-        private static async void Scrap(string Categories)
+        private static async void GetLastPage(string Categories)
         {
-            Console.WriteLine("Starting:" + Categories);
-            List<string> Links = new List<string>();
-            List<string> Name = new List<string>();
-            List<string> Price = new List<string>();
-            List<string> Rating = new List<string>();
-            List<string> Pages = new List<string>();
-            var url = "https://www.varle.lt/" + Categories;
+
+
+
+            try
+            {
+                var url = "https://www.varle.lt" + Categories;
+                var httpClient = new HttpClient();
+
+                var html = await httpClient.GetStringAsync(url);
+                var htmlDocument = new HtmlDocument();
+                htmlDocument.LoadHtml(html);
+
+
+                var ProductsHtml = htmlDocument.DocumentNode.Descendants("div")
+                        .Where(node => node.GetAttributeValue("class", "")
+                        .Equals("ajax-container")).ToList();
+                if (ProductsHtml == null || ProductsHtml.Count() == 0)
+                {
+                    Console.WriteLine("Error finding pages for  " + Categories);
+                }
+                else
+                {
+                    var pages = ProductsHtml[0].Descendants("li")
+                         .Where(node => node.GetAttributeValue("class", "")
+                         .Equals("for-desktop ")).ToList();
+                    String PageHref = "";
+                    if (pages == null || pages.Count() == 0)
+                    {
+                        PageHref = "?p=1";
+                    }
+                    else
+                    {
+                        var lastPage = pages.LastOrDefault().InnerText;
+                        PageHref = "?p=" + lastPage.Replace(" ", "");
+                    }
+                    Console.WriteLine(Categories + " has " + PageHref + " pages");
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Error with  " + Categories + "  LastPage gathering");
+            }
+
+        }
+        private static async Task Scrap2(List<string> Links, string url)
+        {
+            Console.WriteLine("Getting info from: " + url);
+            url = "https://www.varle.lt/" + url;
+
             var httpClient = new HttpClient();
             var html = await httpClient.GetStringAsync(url);
 
@@ -102,77 +225,90 @@ namespace VarleLt
 
             var ProductsHtml = htmlDocument.DocumentNode.Descendants("div")
                 .Where(node => node.GetAttributeValue("class", "")
-                .Equals("grid-items")).ToList();
 
-            var ProductListItems = ProductsHtml[0].Descendants("a")
-                .Where(node => node.GetAttributeValue("class", "")
-                .Equals("img-container")).ToList();
-
-            var pages = ProductsHtml[0].Descendants("div")
-                 .Where(node => node.GetAttributeValue("class", "")
-                 .Equals("pagination")).ToList();
-
-            var pp = pages[0].Descendants("a")
-                .Where(node => node.GetAttributeValue("class", "")
-                .Equals("page")).ToList();
-
-            foreach (var p in pp)
+                .Equals("ajax-container")).ToList();
+            if (ProductsHtml == null || ProductsHtml.Count == 0)
             {
-                Console.WriteLine(p.InnerHtml);
+                Console.WriteLine("Error getting info from" + url);
             }
-            foreach (var ProductListItem in ProductListItems)
+            else
             {
-                Links.Add(ProductListItem.GetAttributeValue("href", ""));
-            }
-         
-            foreach (string link in Links)
-            {
-                url = "http://www.varle.lt" + link;
-                httpClient = new HttpClient();
-                html = await httpClient.GetStringAsync(url);
-                htmlDocument = new HtmlDocument();
-                htmlDocument.LoadHtml(html);
 
-                Name.Add(htmlDocument.DocumentNode.Descendants("h1").FirstOrDefault().InnerText);
-                try
-                {
-                    Price.Add(htmlDocument.DocumentNode.Descendants("div").Where(node => node.GetAttributeValue("id", "").Equals("price-div")).FirstOrDefault().InnerText);
-                }
-                catch (Exception)
-                {
-                    Price.Add("0");
-                }
-                try
-                {
-                    Rating.Add(htmlDocument.DocumentNode.Descendants("span").Where(node => node.GetAttributeValue("class", "").Equals("counter")).FirstOrDefault().InnerText);
-                }
-                catch (Exception)
-                {
-                    Rating.Add("?/5");
-                }
-            }
+                var ProductListItems = ProductsHtml[0].Descendants("div")
+                   .Where(node => node.GetAttributeValue("class", "")
+                   .Equals("img-container")).ToList();
 
-            for (int i = 0; i < Links.Count(); i++)
-            {
-                Name[i] = Name[i].Replace("&quot", "'");
-                Name[i] = Name[i].Replace("&nbsp;", "");
-                Price[i] = Price[i].Replace(" ", "");
-                Price[i] = Price[i].Replace("€", "");
-                Name[i] = Regex.Replace(Name[i], @"\s+", " ");
-                Console.WriteLine(i + ".  Name: " + Name[i]);
-                Console.WriteLine("Price: " + Convert.ToDouble(Price[i]) / 100);
-                Rating[i] = Regex.Replace(Rating[i], @"\s+", " ");
-                int index = Rating[i].IndexOf("(");
-                if(index >= 0)
+
+                foreach (var ProductListItem in ProductListItems)
                 {
-                    Rating[i] = Rating[i].Substring(0, index);
+                    var nodes = ProductListItem.SelectNodes("a[@href]");
+                    foreach (var node in nodes)
+                    {
+                        Links.Add((node.Attributes["href"].Value));
+                    }
                 }
-                Console.WriteLine("Rating: " + Rating[i]);
-                Console.WriteLine("Link: " + Links[i]);
-                Console.WriteLine("Category: " + Categories);
-                Console.WriteLine("___________________________________");
+                Console.WriteLine("Success. Gatthering info.");
+                foreach (string link in Links)
+                {
+                    Console.WriteLine("link = " + link);
+                    url = "https://www.varle.lt"+link;
+                    httpClient = new HttpClient();
+                    html = await httpClient.GetStringAsync(url);
+                    htmlDocument = new HtmlDocument();
+                    htmlDocument.LoadHtml(html);
+                    CategoriesForDB.Add(url);
+                    try
+                    {
+                        Name.Add(htmlDocument.DocumentNode.Descendants("span").Where(node => node.GetAttributeValue("class", "").Equals("title")).FirstOrDefault().InnerText);
+                    }
+                    catch (Exception)
+                    {
+                        Name.Add(link);
+                    }
+                    try
+                    {
+                        Price.Add(htmlDocument.DocumentNode.Descendants("div").Where(node => node.GetAttributeValue("id", "").Equals("price-div")).FirstOrDefault().InnerText);
+                    }
+                    catch (Exception)
+                    {
+                        Price.Add("0");
+                    }
+                    try
+                    {
+                        Rating.Add(htmlDocument.DocumentNode.Descendants("span").Where(node => node.GetAttributeValue("class", "").Equals("counter")).FirstOrDefault().InnerText);
+                    }
+                    catch (Exception)
+                    {
+                        Rating.Add("?/5");
+                    }
+                }
+
+
+
             }
-            Console.WriteLine("Ënding: " + Categories);
+        }
+        public static ItemObject DBObjects(ItemsObject I)
+        {
+            double value;
+            I.price.Replace(",", ".");
+            double.TryParse(I.price, NumberStyles.Any, CultureInfo.InvariantCulture, out value);
+            ItemObject dbObject = new ItemObject
+            {
+                Source_id = 2,
+                category = I.category,
+                title = I.title,
+                url = I.url,
+                price = Convert.ToSingle(value),
+                shipping = Convert.ToSingle(0),
+                shippingDuration = 0,
+                Currency_id = 0,
+                returns = "",
+                weight = Convert.ToSingle(0),
+                description = I.description,
+                img = null
+
+            };
+            return dbObject;
         }
     }
 }

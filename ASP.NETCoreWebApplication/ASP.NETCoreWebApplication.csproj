@@ -59,8 +59,9 @@
       <TypeScriptCompile Include="ClientApp\src\components\common\LinearProgress.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\common\Next.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\common\Row.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\components\common\SortComponent.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\Footer.tsx" />
-      <TypeScriptCompile Include="ClientApp\src\pages\Housing.ts" />
+      <TypeScriptCompile Include="ClientApp\src\pages\Items.tsx" />
       <TypeScriptCompile Include="ClientApp\src\pages\Search.ts" />
     </ItemGroup>
 

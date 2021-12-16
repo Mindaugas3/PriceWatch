@@ -1,3 +1,4 @@
+
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
@@ -305,4 +306,3 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
         return dbObject;
         }
     }
-}

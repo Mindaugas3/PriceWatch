@@ -29,8 +29,9 @@ namespace ASP.NETCoreWebApplication
             string conn = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<PriceWatchContext>(options =>
                 options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
-            
-            
+
+            // services.AddAuthorization()<ApplicationDbContext>(options =>
+            //     options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();

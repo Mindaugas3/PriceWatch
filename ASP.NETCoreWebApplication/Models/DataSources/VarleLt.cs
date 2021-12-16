@@ -225,6 +225,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
 
             var ProductsHtml = htmlDocument.DocumentNode.Descendants("div")
                 .Where(node => node.GetAttributeValue("class", "")
+
                 .Equals("ajax-container")).ToList();
             if (ProductsHtml == null || ProductsHtml.Count == 0)
             {
@@ -309,6 +310,5 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             };
             return dbObject;
         }
-
     }
 }

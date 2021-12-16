@@ -40,7 +40,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
         private static List<string> categories = new List<string>();
         private static List<string> subCategories = new List<string>();
         private static List<string> CategoriesForDB = new List<string>();
-        static void VarleLT(string[] args, PriceWatchContext dbc)
+        public static async Task<List<ItemObject>> VarleLT(PriceWatchContext dbc)
         {
             Category CategoryList = new Category();
 
@@ -85,7 +85,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             }
 
             PWDatabaseInitializer.InsertItems(dbc, databaseEntries);
-            Console.ReadLine();
+            return databaseEntries;
         }
         private static void PrintData()
         {
@@ -212,7 +212,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             }
 
         }
-        private static async Task Scrap2(List<string> Links, string url)
+        public static async Task Scrap2(List<string> Links, string url)
         {
             Console.WriteLine("Getting info from: " + url);
             url = "https://www.varle.lt/" + url;

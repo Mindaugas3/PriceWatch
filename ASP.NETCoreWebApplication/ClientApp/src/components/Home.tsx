@@ -3,7 +3,7 @@ import Purple from './common/Purple';
 import White from './common/White';
 import Block from './common/Block';
 // import Button from 'bootstrap/Button';
-import "./common/PwCss.css";
+// import "./common/PwCss.css";
 import { Layout } from './Layout';
 import Next from "./common/Next";
 import Row from "./common/Row";

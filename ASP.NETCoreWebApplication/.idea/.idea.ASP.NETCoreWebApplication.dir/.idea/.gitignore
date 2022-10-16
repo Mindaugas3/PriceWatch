@@ -1,0 +1,13 @@
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/projectSettingsUpdater.xml
+/contentModel.xml
+/.idea.ASP.NETCoreWebApplication.iml
+/modules.xml
+# Datasource local storage ignored files
+/../../../../../../../../../:\Users\Mindaugas\RiderProjects\PriceWatch\ASP.NETCoreWebApplication\.idea\.idea.ASP.NETCoreWebApplication.dir\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/

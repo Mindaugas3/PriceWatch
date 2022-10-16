@@ -1,0 +1,43 @@
+.purple {
+    color: rgb(228, 47, 228) !important;
+  }
+
+.white {
+    color: white !important;
+}
+
+.getStartedBtn {
+    background-color: rgba(256, 256, 256, 0.75);
+    border: 2px white;
+    float: right;
+}
+
+.h-fit-content {
+    height: fit-content;
+}
+
+.break-word {
+    word-break: break-all;
+}
+
+.bg-purple {
+    background-color: rgb(228, 47, 228);
+}
+
+.bg-purple-admin {
+    background-color: purple;
+}
+
+.btn-xxl {
+    font-size: 3rem;
+}
+
+.w-60 {
+    width: 60%;
+}
+
+.pw-search-form-group {
+    border-radius: 4px;
+    border: 1px solid rgba(228, 47, 228, 0.7);
+    background-color: rgba(228, 47, 228, 0.1);
+}

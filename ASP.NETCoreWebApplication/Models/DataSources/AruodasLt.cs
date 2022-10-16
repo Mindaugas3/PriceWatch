@@ -276,7 +276,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 entry["title"] = titleAndDescription["title"];
                 entry["description"] = titleAndDescription["description"];
             }
-
+            
             List<HousingObject> databaseEntries = new List<HousingObject>();
             foreach (var entry in collectedData)
             {

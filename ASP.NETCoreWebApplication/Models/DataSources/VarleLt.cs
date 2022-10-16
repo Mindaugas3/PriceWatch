@@ -49,7 +49,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             Console.WriteLine("Getting categories");
             GetCategories(categories).Wait();
             Console.WriteLine("Getting subCategories");
-            foreach(string cat in categories)
+            foreach(string cat in categories.ToList())
             {
                 if (cat.Equals("/turizmas/") || cat.Equals("/apple/") || cat.Equals("/ismanieji-namai/") || cat.Equals("/mi-shop/") || cat.Equals("/esporto-zaidimu-gaming-iranga/") || cat.Equals("/loreal/") || cat.Equals("/jura/") || cat.Equals("/samsung/") || cat.Equals(" / sokoladas - saldumynai / "))
                 {
@@ -105,7 +105,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 Console.WriteLine("Price: " + Price[i]);
                 Console.WriteLine("Rating: " + Rating[i]);
                 Console.WriteLine("Category: " + CategoriesForDB[i]);
-                Console.WriteLine("Link: " + Links[i]);
+                ConsoleWriter.WriteHttpGetScrappers(Links[i]);
                 Console.WriteLine("___________________________________");
                 Items.Add(new ItemsObject(CategoriesForDB[i], Name[i], Links[i], Price[i], Rating[i]));
             }
@@ -250,7 +250,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 Console.WriteLine("Success. Gatthering info.");
                 foreach (string link in Links)
                 {
-                    Console.WriteLine("link = " + link);
+                    ConsoleWriter.WriteHttpGetScrappers(link);
                     url = "https://www.varle.lt"+link;
                     httpClient = new HttpClient();
                     html = await httpClient.GetStringAsync(url);

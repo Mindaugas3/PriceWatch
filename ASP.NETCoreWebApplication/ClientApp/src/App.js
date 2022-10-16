@@ -12,6 +12,7 @@ import Admin from './components/admin/index';
 
 import './custom.css'
 import Housing from "./pages/Housing";
+import Items from "./pages/Items";
 
 export default class App extends Component {
   static displayName = App.name;
@@ -26,6 +27,7 @@ export default class App extends Component {
         <Route exact path='/' component={Home} />
         <Route path='/counter' component={Counter} />
         <Route path='/Housing' component={Housing} />
+        <Route path={'/Items'} component={Items} />
         <AuthorizeRoute path='/fetch-data' component={FetchData} />
         <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
       </React.Fragment>

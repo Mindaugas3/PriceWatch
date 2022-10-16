@@ -50,6 +50,9 @@ export class NavMenu extends Component<any, INavMenuState> {
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/Housing">Housing</NavLink>
                 </NavItem>
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/Items">Items</NavLink>
+                </NavItem>
                 <LoginMenu>
                 </LoginMenu>
               </ul>

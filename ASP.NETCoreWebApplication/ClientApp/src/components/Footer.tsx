@@ -1,5 +1,5 @@
 ﻿import React from "react";
-import "./common/PwCss.css";
+// import "./common/PwCss.css";
 
 export default function () {
     return <footer>

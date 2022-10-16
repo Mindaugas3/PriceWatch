@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { LoginMenu } from '../api-authorization/LoginMenu';
 import '../NavMenu.css';
 import White from '../common/White';
-import "../common/PwCss.css"
+// import "../common/PwCss.css"
 // import '../../public/PW-logomaster.jpg';
 
 interface NavMenuState {

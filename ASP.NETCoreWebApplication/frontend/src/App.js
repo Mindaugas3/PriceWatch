@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { Route, Routes } from 'react-router';
+import { Home } from './components/Home';
+import { Counter } from './components/Counter';
+import { Helmet } from "react-helmet";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import './custom.css'
+import Housing from "./pages/Housing";
+import Items from "./pages/Items";
+
+export default class App extends Component {
+  static displayName = App.name;
+
+    render () {
+    return (
+      <React.Fragment>
+        <Helmet>
+            <script src="https://kit.fontawesome.com/a076d05399.js" crossOrigin="anonymous"></script>
+        </Helmet>
+        <Routes>
+          <Route exact path='/' element={<Home/>} />
+          <Route path='/counter' element={<Counter/>} />
+          <Route path='/Housing' element={<Housing/>} />
+          <Route path={'/Items'} element={<Items/>} />
+        </Routes>
+      </React.Fragment>
+    );
+  }
 }
-
-export default App;

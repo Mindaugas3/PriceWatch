@@ -33,13 +33,11 @@ namespace ASP.NETCoreWebApplication.Controllers
 
             IEnumerable<HousingObject> returnObject;
             
-            //no query params? return SELECT * FROM housingobjects
             if(param.Keys.ToArray().Length == 0)
             {
                 return this.pc.HousingObjects.ToArray();
             }
 
-            //use LINQ instead of WHERE
             returnObject = this.pc.HousingObjects.ToArray();
             
             if (param["roomsMin"] != StringValues.Empty && param["roomsMax"] != StringValues.Empty)
@@ -50,11 +48,6 @@ namespace ASP.NETCoreWebApplication.Controllers
                 returnObject = returnObject.Where(r => r.rooms <= roomsMax && r.rooms >= roomsMin);
             }
 
-            // if (param["floors"] != StringValues.Empty)
-            // {
-            //     returnObject = returnObject.Where(r => r.floorsThis == Int32.Parse(param["floors"]));
-            // }
-            
             if (param["priceMin"] != StringValues.Empty)
             {
                 returnObject = returnObject.Where(r => r.price > Int32.Parse(param["priceMin"]));
@@ -84,7 +77,7 @@ namespace ASP.NETCoreWebApplication.Controllers
             {
                 ["type"] = HousingType.BuyFlat,
                 ["rooms"] = new RoomNumberDescriptor(1, 5),
-                ["area"] = new AreaDescriptor(1, 150), //unused
+                ["area"] = new AreaDescriptor(1, 150),
                 ["priceRange"] = new PriceRange(0, 180000),
                 ["optionalSearchText"] = null
             });

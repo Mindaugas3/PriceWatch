@@ -13,7 +13,17 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/ClientApp/package-lock.json">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/ClientApp/tsconfig.json">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Controllers/HousingItemsController.cs">
           <value>
             <set />
           </value>
@@ -24,6 +34,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/Models/DataSources/PiguLt.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Startup.cs">
           <value>
             <set />
           </value>

@@ -26,6 +26,8 @@ namespace ASP.NETCoreWebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
             string conn = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<PriceWatchContext>(options =>
                 options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
@@ -41,6 +43,16 @@ namespace ASP.NETCoreWebApplication
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                    policy  =>
+                    {
+                        policy.WithOrigins("http://localhost:5000",
+                            "https://194.195.241.128:5001");
+                    });
+            });
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -76,6 +88,7 @@ namespace ASP.NETCoreWebApplication
             app.UseAuthentication();
             app.UseIdentityServer();
             app.UseAuthorization();
+            app.UseCors();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

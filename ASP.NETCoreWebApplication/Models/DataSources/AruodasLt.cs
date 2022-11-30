@@ -152,18 +152,6 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
 
         private string BuildUrl()
         {
-            //?FRoomNumMin=10&FRoomNumMax=20 Kambariu skaicius nuo iki
-            //?FAreaOverAllMin=20&FAreaOverAllMax=800 Kvadratiniai metrai
-            
-            //&FHouseState=full PILNAI IRENGTAS
-            //&FHouseState=part DALINAI IRENGTAS
-            //&FHouseState=noteq NEIRENGTAS
-            //&FHouseState=n_finished NEPASTATYTAS
-            //&FHouseState=foundation PAMATAI
-            //?FHouseState=none Neatitinka jokiu kitu parametru
-            
-            //?search_text=lazdynai -> ieskos lazdynuose
-            
             string location = "";
 
             switch (housingType)

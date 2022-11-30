@@ -13,12 +13,12 @@
             <set />
           </value>
         </entry>
-        <entry key="$PROJECT_DIR$/ClientApp/package-lock.json">
+        <entry key="$PROJECT_DIR$/frontend/package-lock.json">
           <value>
             <set />
           </value>
         </entry>
-        <entry key="$PROJECT_DIR$/ClientApp/tsconfig.json">
+        <entry key="$PROJECT_DIR$/frontend/tsconfig.json">
           <value>
             <set />
           </value>

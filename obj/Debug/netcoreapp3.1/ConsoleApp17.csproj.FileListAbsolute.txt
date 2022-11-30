@@ -13,3 +13,10 @@ C:\Users\Mantixas\source\repos\ConsoleApp17\ConsoleApp17\obj\Debug\netcoreapp3.1
 C:\Users\Mantixas\source\repos\ConsoleApp17\ConsoleApp17\obj\Debug\netcoreapp3.1\ConsoleApp17.genruntimeconfig.cache
 C:\Users\Mantixas\source\repos\ConsoleApp17\ConsoleApp17\bin\Debug\netcoreapp3.1\HtmlAgilityPack.dll
 C:\Users\Mantixas\source\repos\ConsoleApp17\ConsoleApp17\obj\Debug\netcoreapp3.1\ConsoleApp17.csproj.CopyComplete
+C:\Users\Mindaugas\RiderProjects\PriceWatch\obj\Debug\netcoreapp3.1\ConsoleApp17.csproj.AssemblyReference.cache
+C:\Users\Mindaugas\RiderProjects\PriceWatch\obj\Debug\netcoreapp3.1\ConsoleApp17.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mindaugas\RiderProjects\PriceWatch\obj\Debug\netcoreapp3.1\ConsoleApp17.AssemblyInfoInputs.cache
+C:\Users\Mindaugas\RiderProjects\PriceWatch\obj\Debug\netcoreapp3.1\ConsoleApp17.AssemblyInfo.cs
+C:\Users\Mindaugas\RiderProjects\PriceWatch\obj\Debug\netcoreapp3.1\ConsoleApp17.csproj.CoreCompileInputs.cache
+C:\Users\Mindaugas\RiderProjects\PriceWatch\obj\Debug\netcoreapp3.1\ConsoleApp17.dll
+C:\Users\Mindaugas\RiderProjects\PriceWatch\obj\Debug\netcoreapp3.1\ConsoleApp17.pdb

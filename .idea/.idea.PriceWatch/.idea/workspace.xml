@@ -84,7 +84,7 @@
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/DataSources/VarleLt.cs" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/DataSources/AlioLt.cs" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/DataSources/Ebay.cs" />
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/ClientApp/src/components/NavMenu.js" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/components/NavMenu.js" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Data/MySQL.cs" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/.gitignore" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/t.razor" />
@@ -99,16 +99,16 @@
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Utils/DefaultParameters.cs" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/HousingObject.cs" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Controllers/HousingController.cs" />
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/ClientApp/src/components/pages/Housing.js.cs" />
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/ClientApp/src/pages/Search.ts" />
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/ClientApp/src/pages/Housing.ts" />
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/ClientApp/src/components/api-authorization/Login.tsx" />
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/ClientApp/src/components/api-authorization/Logout.tsx" />
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/ClientApp/src/components/common/CommonTypes.ts" />
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/ClientApp/src/components/common/Block.tsx" />
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/ClientApp/src/components/Counter.tsx" />
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/ClientApp/src/components/FetchData.tsx" />
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/ClientApp/src/components/NavMenu.tsx" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/components/pages/Housing.js.cs" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/pages/Search.ts" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/pages/Housing.ts" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/components/api-authorization/Login.tsx" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/components/api-authorization/Logout.tsx" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/components/common/CommonTypes.ts" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/components/common/Block.tsx" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/components/Counter.tsx" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/components/FetchData.tsx" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/components/NavMenu.tsx" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Utils/XPathParser.cs" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Utils/ListItemDescriptor.cs" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Utils/HTMLNodeParser.cs" />
@@ -134,7 +134,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="project.propDebugger" />
-    <property name="ts.external.directory.path" value="C:\Users\Mindaugas\RiderProjects\PriceWatch\ASP.NETCoreWebApplication\ClientApp\node_modules\typescript\lib" />
+    <property name="ts.external.directory.path" value="C:\Users\Mindaugas\RiderProjects\PriceWatch\ASP.NETCoreWebApplication\frontend\node_modules\typescript\lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RunManager" selected=".NET Launch Settings Profile.PriceWatch">

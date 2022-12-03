@@ -256,7 +256,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 ["img"] = Tuple.Create("img", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.Image, "---none")),
 
             };
-            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHTML(wd.PageSource, "tr", "list-row", rawValues);
+            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHTML(wd.PageSource, "div", "list-row-v2", rawValues);
 
             foreach (Dictionary<string,string> entry in collectedData)
             {

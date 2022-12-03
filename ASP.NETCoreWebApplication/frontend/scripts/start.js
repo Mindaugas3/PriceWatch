@@ -113,6 +113,13 @@ checkBrowsers(paths.appPath, isInteractive)
       port,
     };
     const devServer = new WebpackDevServer(serverConfig, compiler);
+    // TODO setup webpack middlewares
+    // devServer.options.setupMiddlewares = {
+
+    // }
+    // NOTE do not delete those or the .NET server will crash!
+    devServer.options.onBeforeSetupMiddleware = null;
+    devServer.options.onAfterSetupMiddleware = null;
     // Launch WebpackDevServer.
     devServer.startCallback(() => {
       if (isInteractive) {

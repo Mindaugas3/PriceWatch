@@ -103,7 +103,7 @@ namespace ASP.NETCoreWebApplication
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.UseReactDevelopmentServer(npmScript: "--silent start");
                 }
             });
         }

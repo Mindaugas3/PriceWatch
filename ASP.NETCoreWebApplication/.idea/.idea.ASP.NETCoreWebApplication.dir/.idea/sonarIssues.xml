@@ -3,6 +3,11 @@
   <component name="issues">
     <option name="index">
       <map>
+        <entry key="/Dummy.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/Dummy.txt">
           <value>
             <set />
@@ -29,6 +34,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/Startup.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Utils/HTMLNodeParser.cs">
           <value>
             <set />
           </value>

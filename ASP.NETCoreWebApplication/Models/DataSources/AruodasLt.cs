@@ -247,10 +247,10 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
 
             Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>> rawValues = new Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>>
             {
-                ["price"] = Tuple.Create("span", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName,"list-item-price")),
-                ["area"] = Tuple.Create("td", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName,"list-AreaOverall")),
-                ["rooms"] = Tuple.Create("td", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "list-RoomNum")),
-                ["floors"] = Tuple.Create("td", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "list-Floors")),
+                ["price"] = Tuple.Create("span", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName,"list-item-price-v2")),
+                ["area"] = Tuple.Create("div", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName,"list-AreaOverall-v2")),
+                ["rooms"] = Tuple.Create("div", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "list-RoomNum-v2")),
+                ["floors"] = Tuple.Create("div", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "list-Floors-v2")),
                 ["location"] = Tuple.Create("h3", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "")),
                 ["url"] = Tuple.Create("a", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.Hyperlink, "")),
                 ["img"] = Tuple.Create("img", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.Image, "---none")),
@@ -292,7 +292,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 new Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>>
                 {
                     ["title"] = Tuple.Create("h1", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "obj-header-text")),
-                    ["description"] = Tuple.Create("div", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementId, "collapsedText"))
+                    ["description"] = Tuple.Create("div", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementId, "collapsedTextBlock"))
                 };
             List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHTML(wd.PageSource, "div", "obj-cont", rawValues);
             return collectedData.First();

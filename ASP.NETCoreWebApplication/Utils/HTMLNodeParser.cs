@@ -53,7 +53,7 @@ namespace ASP.NETCoreWebApplication.Utils
             
             foreach (var childNode in descendants)
             {
-                //Console.Write(childNode.InnerHtml);
+                Console.Write(childNode.InnerHtml);
                 bool skipEntry = false;
                 Dictionary<string, string> singleDataItem = new Dictionary<string, string>();
                 //LIST ENTRY

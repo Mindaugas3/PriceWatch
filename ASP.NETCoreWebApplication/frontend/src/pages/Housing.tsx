@@ -7,8 +7,7 @@ import Row from "../components/common/Row";
 import Next from "../components/common/Next";
 import ColoredLinearProgress from "../components/common/LinearProgress";
 import SortComponent from "../components/common/SortComponent";
-
-//import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import * as defaultValues from "./defaultValues.json";
 
 interface IHousingObject {
     title: string,
@@ -33,19 +32,17 @@ function capitalize(input: string): string {
 export default function HousingPage (): JSX.Element {
     const [error, setError] = useState<Error | null>(null);
     const [housingObjects, setHousingObjects] = useState<IHousingObject[]>([]);
-    //search keys
-    const [searchKey, setSearchKey] = useState<string>('');
-    const [priceMin, setPriceMin] = useState<number>(0);
-    const [priceMax, setPriceMax] = useState<number>(100000);
-    const [roomsMin, setRoomsMin] = useState<number>(1);
-    const [roomsMax, setRoomsMax] = useState<number>(5);
-    const [floors, setFloors] = useState<number>(2);
-    const [fetching, setFetching] = useState<boolean>(false);
-    const [searchInDescription, setSeatchInDescription] = useState<boolean>(false);
+    const [searchKey, setSearchKey] = useState<string>(defaultValues.DefaultFilterValues.searchString);
+    const [priceMin, setPriceMin] = useState<number>(defaultValues.DefaultFilterValues.priceMin);
+    const [priceMax, setPriceMax] = useState<number>(defaultValues.DefaultFilterValues.priceMax);
+    const [roomsMin, setRoomsMin] = useState<number>(defaultValues.DefaultFilterValues.roomsMin);
+    const [roomsMax, setRoomsMax] = useState<number>(defaultValues.DefaultFilterValues.roomsMax);
+    const [floors, setFloors] = useState<number>(defaultValues.DefaultFilterValues.floorsNum);
+    const [fetching, setFetching] = useState<boolean>(defaultValues.DefaultFilterValues.fetchingState);
+    const [searchInDescription, setSeatchInDescription] = useState<boolean>(defaultValues.DefaultFilterValues.searchInDescriptionState);
     const params: RequestInit = { headers: {'Content-Type': 'application/json'} };
     
     function removeDuplicatesOnURLKey(data1: IHousingObject[], data2: IHousingObject[]) {
-        //URL will always be unique so we remove duplicates
         let primaryData: IHousingObject[] = [...data1];
         let urls: string[] = primaryData.map((obj: IHousingObject) => obj.url);
         data2.forEach((obj: IHousingObject) => {
@@ -67,7 +64,6 @@ export default function HousingPage (): JSX.Element {
                 setError(err as Error);
             });
         });
-        //
     }
     
     async function navigateTo(src: string){
@@ -75,10 +71,6 @@ export default function HousingPage (): JSX.Element {
     }
 
     async function fetchHousingObjectList(t?: any) {
-        // const token = await authService.getAccessToken();
-        // {
-        //     headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-        // }
         setFetching(true);
         
         const response = await fetch(getHousingObjectsMySQL + (
@@ -92,10 +84,6 @@ export default function HousingPage (): JSX.Element {
     }
 
     async function fetchHousingObjectListScrapper(t?: any) {
-        // const token = await authService.getAccessToken();
-        // {
-        //     headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-        // }
         setFetching(true);
 
         const response = await fetch(getHousingObjects + (

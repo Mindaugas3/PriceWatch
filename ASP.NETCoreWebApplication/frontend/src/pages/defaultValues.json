@@ -1,0 +1,12 @@
+﻿{
+  "DefaultFilterValues": {
+    "searchString": "",
+    "priceMin": 0,
+    "priceMax": 100000,
+    "roomsMin": 1,
+    "roomsMax": 5,
+    "floorsNum": 2,
+    "fetchingState": false,
+    "searchInDescriptionState": false
+  }
+}

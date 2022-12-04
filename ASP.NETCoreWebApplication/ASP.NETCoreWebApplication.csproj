@@ -8,6 +8,7 @@
         <SpaRoot>frontend\</SpaRoot>
         <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
         <TrimUnusedDependencies>false</TrimUnusedDependencies>
+        <UserSecretsId>d9ecb352-4222-48fc-acb9-06b622546227</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>

@@ -5,3 +5,7 @@ riderModule.iml
 /_ReSharper.Caches/
 .idea
 .vs
+
+ASP.NETCoreWebApplication/appsettings.*
+ASP.NETCoreWebApplication/appsettings.json
+ASP.NETCoreWebApplication/secrets.*

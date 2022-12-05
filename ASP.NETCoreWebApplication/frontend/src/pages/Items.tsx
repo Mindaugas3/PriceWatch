@@ -6,7 +6,7 @@ import ColAuto from "../components/common/ColAuto";
 import Row from "../components/common/Row";
 import Next from "../components/common/Next";
 import ColoredLinearProgress from "../components/common/LinearProgress";
-import * as defaultValues from "./defaultValues.json";
+import { DEFAULT_FILTER_VALUES } from "./constants";
 
 interface IItemObject {
     title: string,
@@ -31,10 +31,10 @@ function capitalize(input: string): string {
 export default function ItemsPage (): JSX.Element {
     const [error, setError] = useState<Error | null>(null);
     const [housingObjects, setHousingObjects] = useState<IItemObject[]>([]);
-    const [searchKey, setSearchKey] = useState<string>(defaultValues.DefaultFilterValues.searchString);
-    const [priceMin, setPriceMin] = useState<number>(defaultValues.DefaultFilterValues.priceMin);
-    const [priceMax, setPriceMax] = useState<number>(defaultValues.DefaultFilterValues.priceMax);
-    const [fetching, setFetching] = useState<boolean>(defaultValues.DefaultFilterValues.fetchingState);
+    const [searchKey, setSearchKey] = useState<string>(DEFAULT_FILTER_VALUES.SEARCH_STRING);
+    const [priceMin, setPriceMin] = useState<number>(DEFAULT_FILTER_VALUES.PRICE_MIN);
+    const [priceMax, setPriceMax] = useState<number>(DEFAULT_FILTER_VALUES.PRICE_MAX);
+    const [fetching, setFetching] = useState<boolean>(DEFAULT_FILTER_VALUES.FETCHING_STATE);
     const params: RequestInit = { headers: {'Content-Type': 'application/json'} };
 
     function removeDuplicatesOnURLKey(data1: IItemObject[], data2: IItemObject[]) {

@@ -7,7 +7,7 @@ import Row from "../components/common/Row";
 import Next from "../components/common/Next";
 import ColoredLinearProgress from "../components/common/LinearProgress";
 import SortComponent from "../components/common/SortComponent";
-import * as defaultValues from "./defaultValues.json";
+import { DEFAULT_FILTER_VALUES } from "./constants";
 
 interface IHousingObject {
     title: string,
@@ -32,14 +32,14 @@ function capitalize(input: string): string {
 export default function HousingPage (): JSX.Element {
     const [error, setError] = useState<Error | null>(null);
     const [housingObjects, setHousingObjects] = useState<IHousingObject[]>([]);
-    const [searchKey, setSearchKey] = useState<string>(defaultValues.DefaultFilterValues.searchString);
-    const [priceMin, setPriceMin] = useState<number>(defaultValues.DefaultFilterValues.priceMin);
-    const [priceMax, setPriceMax] = useState<number>(defaultValues.DefaultFilterValues.priceMax);
-    const [roomsMin, setRoomsMin] = useState<number>(defaultValues.DefaultFilterValues.roomsMin);
-    const [roomsMax, setRoomsMax] = useState<number>(defaultValues.DefaultFilterValues.roomsMax);
-    const [floors, setFloors] = useState<number>(defaultValues.DefaultFilterValues.floorsNum);
-    const [fetching, setFetching] = useState<boolean>(defaultValues.DefaultFilterValues.fetchingState);
-    const [searchInDescription, setSeatchInDescription] = useState<boolean>(defaultValues.DefaultFilterValues.searchInDescriptionState);
+    const [searchKey, setSearchKey] = useState<string>(DEFAULT_FILTER_VALUES.SEARCH_STRING);
+    const [priceMin, setPriceMin] = useState<number>(DEFAULT_FILTER_VALUES.PRICE_MIN);
+    const [priceMax, setPriceMax] = useState<number>(DEFAULT_FILTER_VALUES.PRICE_MAX);
+    const [roomsMin, setRoomsMin] = useState<number>(DEFAULT_FILTER_VALUES.ROOMS_MIN);
+    const [roomsMax, setRoomsMax] = useState<number>(DEFAULT_FILTER_VALUES.ROOMS_MAX);
+    const [floors, setFloors] = useState<number>(DEFAULT_FILTER_VALUES.FLOOR_NUM);
+    const [fetching, setFetching] = useState<boolean>(DEFAULT_FILTER_VALUES.FETCHING_STATE);
+    const [searchInDescription, setSeatchInDescription] = useState<boolean>(DEFAULT_FILTER_VALUES.SEARCH_IN_DESCRIPTION_STATE);
     const params: RequestInit = { headers: {'Content-Type': 'application/json'} };
     
     function removeDuplicatesOnURLKey(data1: IHousingObject[], data2: IHousingObject[]) {

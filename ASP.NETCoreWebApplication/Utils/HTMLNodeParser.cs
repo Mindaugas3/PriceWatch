@@ -38,9 +38,6 @@ namespace ASP.NETCoreWebApplication.Utils
                 return this.pf;
             }
         }
-        //HTML - what you feed
-        //ListItemDescendants / className - what you filter out (List)
-        //itemsToChoose - what you filter out from
         public static List<Dictionary<string, string>> FeedHTML(string HTML, string ListItemDescendants, string className, Dictionary<String, Tuple<String, ParseOptions>> itemsToChoose)
         {
             List<Dictionary<string, string>> AggregateData = new List<Dictionary<string, string>>();
@@ -53,13 +50,11 @@ namespace ASP.NETCoreWebApplication.Utils
             
             foreach (var childNode in descendants)
             {
-                Console.Write(childNode.InnerHtml);
                 bool skipEntry = false;
                 Dictionary<string, string> singleDataItem = new Dictionary<string, string>();
                 //LIST ENTRY
                 foreach (var key in itemsToChoose.Keys)
                 {
-                   //DATA COLLECTION
                    string selectorTagName = itemsToChoose[key].Item1;
                    ParserFlags pf = itemsToChoose[key].Item2.getParserFlags();
                    string selectorClassName = itemsToChoose[key].Item2.getAttrName();
@@ -101,7 +96,6 @@ namespace ASP.NETCoreWebApplication.Utils
                            break;
                        }
                    }
-                   //DATA ENTRY
                    if (data == null)
                    {
                        skipEntry = true;
@@ -114,7 +108,6 @@ namespace ASP.NETCoreWebApplication.Utils
                     AggregateData.Add(singleDataItem);
                 }
             }
-            //parse XPath
             return AggregateData;
         }
     }

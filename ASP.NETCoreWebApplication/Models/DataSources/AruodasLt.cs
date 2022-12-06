@@ -5,6 +5,7 @@ using System.Linq;
 using ASP.NETCoreWebApplication.Interactors;
 using ASP.NETCoreWebApplication.Utils;
 using OpenQA.Selenium;
+using Range = ASP.NETCoreWebApplication.Utils.Range;
 
 namespace ASP.NETCoreWebApplication.Models.DataSources
 {
@@ -26,190 +27,74 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
         None //Neatitinka jokiu kitu parametru
     }
 
-    public class RangeDescriptor
-    {
-        public enum RoomRangeType
-        {
-            Exact, //exactly X rooms
-            RangeOf //Rooms from X to Y, will throw InvalidDescriptorException if Y < X
-        }
-
-        private RoomRangeType _rangeType;
-        private int min;
-        private int max;
-        private int exactly;
-
-        public class InvalidDescriptorException : Exception
-        {}
-
-        public RangeDescriptor(int min, int max)
-        {
-            if (min > max)
-            {
-                throw new InvalidDescriptorException();
-            }
-
-            if (min < 1 || max < 1)
-            {
-                //logiskai niekada nebus maziau nei 1 kambario butas
-                throw new InvalidDescriptorException();
-            }
-
-            this.min = min;
-            this.max = max;
-            this._rangeType = RoomRangeType.RangeOf;
-        }
-
-        public RangeDescriptor(int exactly)
-        {
-            if (exactly < 1)
-            {
-                throw new InvalidDescriptorException();
-            }
-
-            this.exactly = exactly;
-            this._rangeType = RoomRangeType.Exact;
-        }
-
-        public RoomRangeType GetRangeType()
-        {
-            return this._rangeType;
-        }
-
-        public int GetMin()
-        {
-            return this.min;
-        }
-
-        public int GetMax()
-        {
-            return this.max;
-        }
-
-        public int GetExactly()
-        {
-            return this.exactly;
-        }
-
-    }
-
-    public class RoomNumberDescriptor : RangeDescriptor
-    {
-        public RoomNumberDescriptor(int min, int max) : base(min, max)
-        {
-        }
-
-        public RoomNumberDescriptor(int exactly) : base(exactly)
-        {
-        }
-    }
-
-    public class AreaDescriptor : RangeDescriptor
-    {
-        public AreaDescriptor(int min, int max) : base(min, max)
-        {
-        }
-    }
-    
     public class AruodasLt
     {
-        private readonly HousingType housingType;
-        private readonly PriceRange priceRange;
-        private readonly RoomNumberDescriptor rooms;
-        private readonly AreaDescriptor area; //kvadratiniai metrai
-        private readonly string? optionalSearch;
-        public AruodasLt(HousingType type, RoomNumberDescriptor rooms, AreaDescriptor area, PriceRange priceRange, string? optionalSearchText)
+        private readonly HousingType _housingType;
+        private readonly Range _price;
+        private readonly Range _rooms;
+        private readonly Range _area; //kvadratiniai metrai
+        private readonly Range _floors;
+        private readonly string? _optionalSearch;
+
+        public AruodasLt(HousingType type, Range rooms, Range area, Range floors, Range price, string optionalSearchText = null)
         {
-            this.housingType = type;
-            this.rooms = rooms;
-            this.priceRange = priceRange;
-            this.area = area;
-            this.optionalSearch = optionalSearchText;
+            this._housingType = type;
+            this._rooms = rooms;
+            this._price = price;
+            this._area = area;
+            this._optionalSearch = optionalSearchText;
+            this._floors = floors;
         }
 
         private string BuildUrl()
         {
-            string location = "";
-
-            switch (housingType)
+            string location = _housingType switch
             {
-                case HousingType.BuyFlat:
-                {
-                    location = "https://www.aruodas.lt/butai/?";
-                    break;
-                }
-                case HousingType.BuyHouse:
-                {
-                    location = "https://www.aruodas.lt/namai/?";
-                    break;
-                }
-                case HousingType.RentFlat:
-                {
-                    location = "https://www.aruodas.lt/butu-nuoma/?";
-                    break;
-                }
-                case HousingType.RentHouse:
-                {
-                    location = "https://www.aruodas.lt/namu-nuoma/";
-                    break;
-                }
-                default:
-                {
-                    throw new InvalidLocationException();
-                }
-            }
+                HousingType.BuyFlat => "https://www.aruodas.lt/butai/?",
+                HousingType.BuyHouse => "https://www.aruodas.lt/namai/?",
+                HousingType.RentFlat => "https://www.aruodas.lt/butu-nuoma/?",
+                HousingType.RentHouse => "https://www.aruodas.lt/namu-nuoma/",
+                _ => throw new ArgumentException("Invalid argument for HousingType")
+            };
+
+            location += "FRoomNumMin=";
+            location += this._rooms.Min.ToString();
+            location += "&";
+            location += "FRoomNumMax=";
+            location += this._rooms.Max.ToString();
+            location += "&";
             
-            RoomNumberDescriptor.RoomRangeType rangeType = this.rooms.GetRangeType();
-            if (rangeType == RoomNumberDescriptor.RoomRangeType.Exact)
-            {
-                location += "FRoomNumMin=";
-                location += this.rooms.GetExactly().ToString();
-                location += "&";
-                location += "FRoomNumMax=";
-                location += this.rooms.GetExactly().ToString();
-                location += "&";
-            }
-            else
-            {
-                location += "FRoomNumMin=";
-                location += this.rooms.GetMin().ToString();
-                location += "&";
-                location += "FRoomNumMax=";
-                location += this.rooms.GetMax().ToString();
-                location += "&";
-            }
+            location += "FPriceMin=";
+            location += this._price.Min.ToString();
+            location += "&";
+            location += "FPriceMax=";
+            location += this._price.Max.ToString();
+            location += "&";
 
-            AreaDescriptor.RoomRangeType areaRangeType = this.area.GetRangeType();
-            if (areaRangeType == AreaDescriptor.RoomRangeType.Exact)
-            {
-                location += "FAreaOverAllMin=";
-                location += this.area.GetExactly().ToString();
-                location += "&";
-                location += "FAreaOverAllMax=";
-                location += this.area.GetExactly().ToString();
-                location += "&";
-            }
-            else
-            {
-                location += "FAreaOverAllMin=";
-                location += this.area.GetMin().ToString();
-                location += "&";
-                location += "FAreaOverAllMax=";
-                location += this.area.GetMax().ToString();
-                location += "&";
-            }
+            location += "FAreaOverAllMin=";
+            location += this._area.Min.ToString();
+            location += "&";
+            location += "FAreaOverAllMax=";
+            location += this._area.Max.ToString();
+            location += "&";
 
-            if (optionalSearch != null)
+            location += "FFloorNumMin=";
+            location += this._floors.Min.ToString();
+            location += "&";
+            location += "FFloorNumMax=";
+            location += this._floors.Max.ToString();
+
+            if (_optionalSearch != null)
             {
                 location += "search_text=";
-                location += optionalSearch;
+                location += _optionalSearch;
             }
 
-            ConsoleWriter.WriteHttpGetScrappers(location);
+            Logger.WriteHttpGetScrappers(location);
             return location;
         }
 
-        public HousingObject[] Scrap(PriceWatchContext dbc, int depth = 4)
+        public IEnumerable<HousingObject> Scrap(PriceWatchContext dbc, int depth = 4)
         {
             
             if(depth < 1) throw new ArgumentException("depth cannot be zero or negative");
@@ -227,11 +112,11 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 ["img"] = Tuple.Create("img", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.Image, "---none")),
 
             };
-            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHTML(wd.PageSource, "div", "list-row-v2", rawValues);
+            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHtml(wd.PageSource, "div", "list-row-v2", rawValues);
 
             foreach (Dictionary<string,string> entry in collectedData)
             {
-                var titleAndDescription = deepScrap(wd, entry["url"]);
+                var titleAndDescription = DeepScrap(wd, entry["url"]);
                 entry["title"] = titleAndDescription["title"];
                 entry["description"] = titleAndDescription["description"];
             }
@@ -239,7 +124,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             List<HousingObject> databaseEntries = new List<HousingObject>();
             foreach (var entry in collectedData)
             {
-                HousingObject obj = toDBO(entry);
+                HousingObject obj = ToDbo(entry);
                 databaseEntries.Add(obj);
             }
 
@@ -253,9 +138,9 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             return databaseEntries.ToArray();
         }
 
-        public static Dictionary<string, string> deepScrap(WebDriver wd, string url)
+        private static Dictionary<string, string> DeepScrap(WebDriver wd, string url)
         {
-            ConsoleWriter.WriteHttpGetScrappers(url);
+            Logger.WriteHttpGetScrappers(url);
             wd.Navigate().GoToUrl(url);
             Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>> rawValues =
                 new Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>>
@@ -263,22 +148,21 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                     ["title"] = Tuple.Create("h1", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "obj-header-text")),
                     ["description"] = Tuple.Create("div", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementId, "collapsedTextBlock"))
                 };
-            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHTML(wd.PageSource, "div", "obj-cont", rawValues);
+            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHtml(wd.PageSource, "div", "obj-cont", rawValues);
             return collectedData.First();
         }
 
-        public HousingObject toDBO(Dictionary<string, string> insertable)
+        private static HousingObject ToDbo(Dictionary<string, string> insertable)
         {
             string price = insertable["price"].Replace(" ", "").Replace("\n", "").Replace("\r", "");
             string currency = price.Substring(price.Length - 1); //last character
 
-            int priceAmount = Int32.Parse(new string(price.Where(c => char.IsDigit(c)).ToArray()));
+            int priceAmount = Int32.Parse(new string(price.Where(char.IsDigit).ToArray()));
             
             var floors = insertable["floors"].Replace(" ", "").Replace("\n", "").Replace("\r", "").Split("/");
             int currentFloor = Int32.Parse(floors[0]);
             int maxFloor = Int32.Parse(floors[1]);
             
-            var rooms = Int32.Parse(insertable["rooms"].Replace(" ", "").Replace("\n", "").Replace("\r", ""));
             var area = (int) float.Parse(insertable["area"].Replace(" ", "").Replace("\n", "").Replace("\r", "")
                 , CultureInfo.InvariantCulture);
 

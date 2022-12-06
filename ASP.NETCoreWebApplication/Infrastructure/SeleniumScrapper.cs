@@ -10,16 +10,6 @@ namespace ASP.NETCoreWebApplication.Interactors
 {
     internal static class SeleniumScrapper
     {
-        private static RemoteWebDriver _webDriver;
-        private static readonly List<string> CssSelectors = new List<string>
-        {
-            "div > table > tbody > tr",
-            "tr[class]",
-            "tr[class='odd']",
-            "*[class='odd']",
-            "tr[class*='e']"
-        };
-        
         public static WebDriver CreateFirefoxDriver()
         {
             var options = new FirefoxOptions();

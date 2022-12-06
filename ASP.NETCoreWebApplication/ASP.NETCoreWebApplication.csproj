@@ -53,7 +53,6 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="frontend\src\components\pages" />
-      <Folder Include="Tests" />
     </ItemGroup>
     <ItemGroup>
       <TypeScriptCompile Include="frontend\src\components\common\ColAuto.tsx" />

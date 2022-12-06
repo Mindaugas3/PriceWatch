@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace ASP.NETCoreWebApplication.Utils
 {
-    public class ConsoleWriter
+    public class Logger
     {
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void WriteHttpGetScrappers(string url)

@@ -7,47 +7,47 @@ namespace ASP.NETCoreWebApplication.Utils
 {
     public class XPathParser
     {
-        private readonly string MainXPathItem;
-        private readonly List<string> XPathRemovalList;
-        private readonly Dictionary<string, string> XPathDataKeys;
+        private readonly string _mainXPathItem;
+        private readonly List<string> _xPathRemovalList;
+        private readonly Dictionary<string, string> _xPathDataKeys;
         
         public XPathParser(string mainXPathItem, List<string> xPathRemovalList,
             Dictionary<string, string> xPathDataKeys)
         {
-            this.XPathDataKeys = xPathDataKeys;
-            this.XPathRemovalList = xPathRemovalList;
-            this.MainXPathItem = mainXPathItem;
+            this._xPathDataKeys = xPathDataKeys;
+            this._xPathRemovalList = xPathRemovalList;
+            this._mainXPathItem = mainXPathItem;
         }
         
-        public List<Dictionary<string, string>> FeedHTML(string HTML)
+        public List<Dictionary<string, string>> FeedHtml(string html)
         {
             HtmlDocument htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(HTML);
+            htmlDocument.LoadHtml(html);
             
-            var mainNodes = htmlDocument.DocumentNode.SelectNodes(this.MainXPathItem);
+            var mainNodes = htmlDocument.DocumentNode.SelectNodes(this._mainXPathItem);
             Console.Write(mainNodes.Count);
-            List<Dictionary<string, string>> AggregateData = new List<Dictionary<string, string>>();
+            List<Dictionary<string, string>> aggregateData = new List<Dictionary<string, string>>();
             foreach (var childNode in mainNodes)
             {
-                Console.Write(childNode.SelectNodes(this.XPathDataKeys["price"])?.FirstOrDefault()?.InnerHtml + "\n");
-                this.XPathRemovalList.Select(x => childNode?.SelectNodes(x)?.ToList())
+                Console.Write(childNode.SelectNodes(this._xPathDataKeys["price"])?.FirstOrDefault()?.InnerHtml + "\n");
+                this._xPathRemovalList.Select(x => childNode?.SelectNodes(x)?.ToList())
                     .Where(x => x != null)
                     .SelectMany(x => x)
                     .ToList()
                     .ForEach(nodeToRemove => nodeToRemove.Remove());
 
-                Dictionary<string, string> keyedData = this.XPathDataKeys.Keys
+                Dictionary<string, string> keyedData = this._xPathDataKeys.Keys
                     .ToDictionary(x => x,
-                    x => childNode.SelectNodes(this.XPathDataKeys[x])
+                    x => childNode.SelectNodes(this._xPathDataKeys[x])
                         ?.Where(y => y != null)
                         .Select(y => y.OriginalName == "img" ? y.Attributes["src"].Value : y.InnerHtml)
                         .ToArray()
                         .Aggregate((a, b) => a + ";" + b)
                 );
                 
-                AggregateData.Add(keyedData);
+                aggregateData.Add(keyedData);
             }
-            return AggregateData;
+            return aggregateData;
         }
     }
 }

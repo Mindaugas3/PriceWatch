@@ -19,32 +19,32 @@ namespace ASP.NETCoreWebApplication.Utils
 
         public class ParseOptions
         {
-            private ParserFlags pf { get; }
-            private string attribute { get; }
+            private ParserFlags ParserFlags { get; }
+            private string Attribute { get; }
 
-            public ParseOptions(ParserFlags pf, string attribName)
+            public ParseOptions(ParserFlags parserFlags, string attribName)
             {
-                this.pf = pf;
-                this.attribute = attribName;
+                this.ParserFlags = parserFlags;
+                this.Attribute = attribName;
             }
 
-            public string getAttrName()
+            public string GetAttributeName()
             {
-                return this.attribute;
+                return this.Attribute;
             }
 
-            public ParserFlags getParserFlags()
+            public ParserFlags GetParserFlags()
             {
-                return this.pf;
+                return this.ParserFlags;
             }
         }
-        public static List<Dictionary<string, string>> FeedHTML(string HTML, string ListItemDescendants, string className, Dictionary<String, Tuple<String, ParseOptions>> itemsToChoose)
+        public static List<Dictionary<string, string>> FeedHtml(string html, string listItemDescendants, string className, Dictionary<string, Tuple<string, ParseOptions>> itemsToChoose)
         {
-            List<Dictionary<string, string>> AggregateData = new List<Dictionary<string, string>>();
+            List<Dictionary<string, string>> aggregateData = new List<Dictionary<string, string>>();
             HtmlDocument htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(HTML);
+            htmlDocument.LoadHtml(html);
 
-            var descendants = htmlDocument.DocumentNode.Descendants(ListItemDescendants)
+            var descendants = htmlDocument.DocumentNode.Descendants(listItemDescendants)
                 .Where(node => node.GetAttributeValue("class", "")
                 .Contains(className));
             
@@ -56,8 +56,8 @@ namespace ASP.NETCoreWebApplication.Utils
                 foreach (var key in itemsToChoose.Keys)
                 {
                    string selectorTagName = itemsToChoose[key].Item1;
-                   ParserFlags pf = itemsToChoose[key].Item2.getParserFlags();
-                   string selectorClassName = itemsToChoose[key].Item2.getAttrName();
+                   ParserFlags pf = itemsToChoose[key].Item2.GetParserFlags();
+                   string selectorClassName = itemsToChoose[key].Item2.GetAttributeName();
                    string data = "";
                    switch (pf)
                    {
@@ -105,10 +105,10 @@ namespace ASP.NETCoreWebApplication.Utils
 
                 if (!skipEntry)
                 {
-                    AggregateData.Add(singleDataItem);
+                    aggregateData.Add(singleDataItem);
                 }
             }
-            return AggregateData;
+            return aggregateData;
         }
     }
 }

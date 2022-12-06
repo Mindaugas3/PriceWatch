@@ -26,7 +26,6 @@ namespace ASP.NETCoreWebApplication.Utils
             
             var mainNodes = htmlDocument.DocumentNode.SelectNodes(this.MainXPathItem);
             Console.Write(mainNodes.Count);
-            string rowResultHTML = "";
             List<Dictionary<string, string>> AggregateData = new List<Dictionary<string, string>>();
             foreach (var childNode in mainNodes)
             {

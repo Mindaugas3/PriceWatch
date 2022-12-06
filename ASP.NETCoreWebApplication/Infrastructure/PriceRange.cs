@@ -9,10 +9,6 @@
             this.max = max;
             this.min = min;
         }
-
-        public bool Match(int price)
-        {
-            return price < this.max && price < this.min;
-        }
+        
     }
 }

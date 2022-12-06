@@ -12,11 +12,6 @@ namespace ASP.NETCoreWebApplication.Utils
             this.defaultMapping = defaultM;
         }
 
-        public void ReplaceKey(string key, dynamic value)
-        {
-            defaultMapping[key] = value;
-        }
-
         public dynamic this[string key]
         {
             get { return defaultMapping[key]; }

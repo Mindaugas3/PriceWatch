@@ -40,12 +40,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
         private int exactly;
 
         public class InvalidDescriptorException : Exception
-        {
-            public InvalidDescriptorException()
-            {
-                
-            }
-        }
+        {}
 
         public RangeDescriptor(int min, int max)
         {
@@ -74,18 +69,6 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
 
             this.exactly = exactly;
             this._rangeType = RoomRangeType.Exact;
-        }
-
-        public bool MatchDescriptor(int rooms)
-        {
-            if (_rangeType == RoomRangeType.Exact)
-            {
-                return this.exactly == rooms;
-            }
-            else
-            {
-                return rooms >= this.min && rooms <= this.max;
-            }
         }
 
         public RoomRangeType GetRangeType()
@@ -126,10 +109,6 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
         public AreaDescriptor(int min, int max) : base(min, max)
         {
         }
-
-        public AreaDescriptor(int exactly) : base(exactly)
-        {
-        }
     }
     
     public class AruodasLt
@@ -141,13 +120,11 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
         private readonly string? optionalSearch;
         public AruodasLt(HousingType type, RoomNumberDescriptor rooms, AreaDescriptor area, PriceRange priceRange, string? optionalSearchText)
         {
-            //assign
             this.housingType = type;
             this.rooms = rooms;
             this.priceRange = priceRange;
             this.area = area;
             this.optionalSearch = optionalSearchText;
-            //search
         }
 
         private string BuildUrl()
@@ -185,7 +162,6 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             RoomNumberDescriptor.RoomRangeType rangeType = this.rooms.GetRangeType();
             if (rangeType == RoomNumberDescriptor.RoomRangeType.Exact)
             {
-                //?FRoomNumMin=Exact&FRoomNumMax=Exact
                 location += "FRoomNumMin=";
                 location += this.rooms.GetExactly().ToString();
                 location += "&";
@@ -230,7 +206,6 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             }
 
             ConsoleWriter.WriteHttpGetScrappers(location);
-            //remove last & from URLs
             return location;
         }
 
@@ -238,13 +213,9 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
         {
             
             if(depth < 1) throw new ArgumentException("depth cannot be zero or negative");
-            //get html
             WebDriver wd = SeleniumScrapper.CreateFirefoxDriver();
             wd.Navigate().GoToUrl(this.BuildUrl());
             
-            //hardcoding is bad lol
-            //TODO move hardcoded values to database
-
             Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>> rawValues = new Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>>
             {
                 ["price"] = Tuple.Create("span", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName,"list-item-price-v2")),
@@ -272,7 +243,6 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 databaseEntries.Add(obj);
             }
 
-            //remove dublicates from UNIQUE keys before DB inserts
             databaseEntries = databaseEntries
                 .GroupBy(entry => entry.url)
                 .Select(g => g.First())
@@ -283,7 +253,6 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
             return databaseEntries.ToArray();
         }
 
-        //atidaro Aruodas.lt skelbimo puslapi ir paima duomenis is vidaus
         public static Dictionary<string, string> deepScrap(WebDriver wd, string url)
         {
             ConsoleWriter.WriteHttpGetScrappers(url);
@@ -300,23 +269,19 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
 
         public HousingObject toDBO(Dictionary<string, string> insertable)
         {
-            //parse price
             string price = insertable["price"].Replace(" ", "").Replace("\n", "").Replace("\r", "");
             string currency = price.Substring(price.Length - 1); //last character
 
             int priceAmount = Int32.Parse(new string(price.Where(c => char.IsDigit(c)).ToArray()));
             
-            //parse floors
             var floors = insertable["floors"].Replace(" ", "").Replace("\n", "").Replace("\r", "").Split("/");
             int currentFloor = Int32.Parse(floors[0]);
             int maxFloor = Int32.Parse(floors[1]);
             
-            //parse rooms and area
             var rooms = Int32.Parse(insertable["rooms"].Replace(" ", "").Replace("\n", "").Replace("\r", ""));
             var area = (int) float.Parse(insertable["area"].Replace(" ", "").Replace("\n", "").Replace("\r", "")
                 , CultureInfo.InvariantCulture);
 
-            //parse location
             var location = insertable["location"].Replace("\n", " ").Replace("\r", " ");
             HousingObject dbObject = new HousingObject
             {

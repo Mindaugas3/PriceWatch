@@ -9,12 +9,6 @@ namespace ASP.NETCoreWebApplication.Models
         {
             priceWatchContext.Database.EnsureCreated();
         }
-        
-        public static void insert(PriceWatchContext context, HousingObject obj)
-        {
-            context.HousingObjects.Add(obj);
-            context.SaveChanges();
-        }
 
         public static void InsertMany(PriceWatchContext context, List<HousingObject> hList)
         {

@@ -25,42 +25,42 @@ namespace ASP.NETCoreWebApplication.Controllers
         public IEnumerable<HousingObject> SqlGet()
         {
             
-            var param = this.Request.Query;
+            var requestQuery = this.Request.Query;
 
             var houses = this.pc.HousingObjects;
             
-            Console.WriteLine(param["priceMax"]);
+            Console.WriteLine(requestQuery["priceMax"]);
 
             IEnumerable<HousingObject> returnObject;
             
-            if(param.Keys.ToArray().Length == 0)
+            if(requestQuery.Keys.ToArray().Length == 0)
             {
                 return this.pc.HousingObjects.ToArray();
             }
 
             returnObject = this.pc.HousingObjects.ToArray();
             
-            if (param["roomsMin"] != StringValues.Empty && param["roomsMax"] != StringValues.Empty)
+            if (requestQuery["roomsMin"] != StringValues.Empty && requestQuery["roomsMax"] != StringValues.Empty)
             {
-                var roomsMin = Int32.Parse(param["roomsMin"]);
-                var roomsMax = Int32.Parse(param["roomsMax"]);
+                var roomsMin = Int32.Parse(requestQuery["roomsMin"]);
+                var roomsMax = Int32.Parse(requestQuery["roomsMax"]);
 
                 returnObject = returnObject.Where(r => r.rooms <= roomsMax && r.rooms >= roomsMin);
             }
 
-            if (param["priceMin"] != StringValues.Empty)
+            if (requestQuery["priceMin"] != StringValues.Empty)
             {
-                returnObject = returnObject.Where(r => r.price > Int32.Parse(param["priceMin"]));
+                returnObject = returnObject.Where(r => r.price > Int32.Parse(requestQuery["priceMin"]));
             }
             
-            if (param["priceMax"] != StringValues.Empty)
+            if (requestQuery["priceMax"] != StringValues.Empty)
             {
-                returnObject = returnObject.Where(r => r.price < Int32.Parse(param["priceMax"]));
+                returnObject = returnObject.Where(r => r.price < Int32.Parse(requestQuery["priceMax"]));
             }
             
-            if (param["searchKey"] != StringValues.Empty)
+            if (requestQuery["searchKey"] != StringValues.Empty)
             {
-                returnObject = returnObject.Where(r => r.title.Contains(param["searchKey"]));
+                returnObject = returnObject.Where(r => r.title.Contains(requestQuery["searchKey"]));
             }
 
             return returnObject;

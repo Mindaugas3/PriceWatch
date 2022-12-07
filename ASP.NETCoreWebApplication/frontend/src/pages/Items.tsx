@@ -6,6 +6,7 @@ import ColAuto from "../components/common/ColAuto";
 import Row from "../components/common/Row";
 import Next from "../components/common/Next";
 import ColoredLinearProgress from "../components/common/LinearProgress";
+import { DEFAULT_FILTER_VALUES } from "./constants";
 
 interface IItemObject {
     title: string,
@@ -30,18 +31,13 @@ function capitalize(input: string): string {
 export default function ItemsPage (): JSX.Element {
     const [error, setError] = useState<Error | null>(null);
     const [housingObjects, setHousingObjects] = useState<IItemObject[]>([]);
-    //search keys
-    const [searchKey, setSearchKey] = useState<string>('');
-    const [priceMin, setPriceMin] = useState<number>(0);
-    const [priceMax, setPriceMax] = useState<number>(100000);
-    const [roomsMin, setRoomsMin] = useState<number>(1);
-    const [roomsMax, setRoomsMax] = useState<number>(5);
-    const [floors, setFloors] = useState<number>(2);
-    const [fetching, setFetching] = useState<boolean>(false);
+    const [searchKey, setSearchKey] = useState<string>(DEFAULT_FILTER_VALUES.SEARCH_STRING);
+    const [priceMin, setPriceMin] = useState<number>(DEFAULT_FILTER_VALUES.PRICE_MIN);
+    const [priceMax, setPriceMax] = useState<number>(DEFAULT_FILTER_VALUES.PRICE_MAX);
+    const [fetching, setFetching] = useState<boolean>(DEFAULT_FILTER_VALUES.FETCHING_STATE);
     const params: RequestInit = { headers: {'Content-Type': 'application/json'} };
 
     function removeDuplicatesOnURLKey(data1: IItemObject[], data2: IItemObject[]) {
-        //URL will always be unique so we remove duplicates
         let primaryData: IItemObject[] = [...data1];
         let urls: string[] = primaryData.map((obj: IItemObject) => obj.url);
         data2.forEach((obj: IItemObject) => {
@@ -103,12 +99,9 @@ export default function ItemsPage (): JSX.Element {
         fetchHousingObjectList({
             searchKey,
             priceMin,
-            priceMax,
-            roomsMin,
-            roomsMax,
-            floors
+            priceMax
         });
-    }, [searchKey, priceMin, priceMax, roomsMin, roomsMax, floors]);
+    }, [searchKey, priceMin, priceMax]);
 
     return <Layout>
         <Card>
@@ -125,12 +118,6 @@ export default function ItemsPage (): JSX.Element {
                 </div>
                 <div className={"w-100"}>
 
-                </div>
-                <div className={"col-lg-4"}>
-                    Rooms min {' '} <input type={"number"} value={roomsMin} onChange={(e) => setRoomsMin(parseInt(e.target.value))}/>
-                </div>
-                <div className={"col-lg-4"}>
-                    Rooms max {' '} <input type={"number"} value={roomsMax} onChange={(e) => setRoomsMax(parseInt(e.target.value))}/>
                 </div>
                 <div className={"w-100"}>
 
@@ -159,10 +146,7 @@ export default function ItemsPage (): JSX.Element {
                             {
                                 searchKey,
                                 priceMin,
-                                priceMax,
-                                roomsMin,
-                                roomsMax,
-                                floors
+                                priceMax
                             }
                         )} variant={"outlined"}>Force scan</Button>
                     </div>

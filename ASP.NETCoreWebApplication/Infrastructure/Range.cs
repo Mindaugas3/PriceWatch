@@ -2,7 +2,6 @@
 {
     public struct Range
     {
-
         public Range(int min, int max)
         {
             this.Max = max;
@@ -17,6 +16,5 @@
         {
             get;
         }
-
     }
 }

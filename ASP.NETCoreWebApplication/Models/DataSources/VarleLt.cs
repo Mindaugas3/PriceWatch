@@ -43,8 +43,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
         public static async Task<List<ItemObject>> VarleLT(PriceWatchContext dbc)
         {
             Category CategoryList = new Category();
-
-
+            
             //subCategories.Add("televizoriai/");
             Console.WriteLine("Getting categories");
             GetCategories(categories).Wait();
@@ -105,7 +104,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 Console.WriteLine("Price: " + Price[i]);
                 Console.WriteLine("Rating: " + Rating[i]);
                 Console.WriteLine("Category: " + CategoriesForDB[i]);
-                ConsoleWriter.WriteHttpGetScrappers(Links[i]);
+                Logger.WriteHttpGetScrappers(Links[i]);
                 Console.WriteLine("___________________________________");
                 Items.Add(new ItemsObject(CategoriesForDB[i], Name[i], Links[i], Price[i], Rating[i]));
             }
@@ -250,7 +249,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 Console.WriteLine("Success. Gatthering info.");
                 foreach (string link in Links)
                 {
-                    ConsoleWriter.WriteHttpGetScrappers(link);
+                    Logger.WriteHttpGetScrappers(link);
                     url = "https://www.varle.lt"+link;
                     httpClient = new HttpClient();
                     html = await httpClient.GetStringAsync(url);

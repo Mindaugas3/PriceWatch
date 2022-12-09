@@ -19,50 +19,45 @@ namespace ASP.NETCoreWebApplication.Utils
 
         public class ParseOptions
         {
-            private ParserFlags pf { get; }
-            private string attribute { get; }
+            private ParserFlags ParserFlags { get; }
+            private string Attribute { get; }
 
-            public ParseOptions(ParserFlags pf, string attribName)
+            public ParseOptions(ParserFlags parserFlags, string attribName)
             {
-                this.pf = pf;
-                this.attribute = attribName;
+                this.ParserFlags = parserFlags;
+                this.Attribute = attribName;
             }
 
-            public string getAttrName()
+            public string GetAttributeName()
             {
-                return this.attribute;
+                return this.Attribute;
             }
 
-            public ParserFlags getParserFlags()
+            public ParserFlags GetParserFlags()
             {
-                return this.pf;
+                return this.ParserFlags;
             }
         }
-        //HTML - what you feed
-        //ListItemDescendants / className - what you filter out (List)
-        //itemsToChoose - what you filter out from
-        public static List<Dictionary<string, string>> FeedHTML(string HTML, string ListItemDescendants, string className, Dictionary<String, Tuple<String, ParseOptions>> itemsToChoose)
+        public static List<Dictionary<string, string>> FeedHtml(string html, string listItemDescendants, string className, Dictionary<string, Tuple<string, ParseOptions>> itemsToChoose)
         {
-            List<Dictionary<string, string>> AggregateData = new List<Dictionary<string, string>>();
+            List<Dictionary<string, string>> aggregateData = new List<Dictionary<string, string>>();
             HtmlDocument htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(HTML);
+            htmlDocument.LoadHtml(html);
 
-            var descendants = htmlDocument.DocumentNode.Descendants(ListItemDescendants)
+            var descendants = htmlDocument.DocumentNode.Descendants(listItemDescendants)
                 .Where(node => node.GetAttributeValue("class", "")
                 .Contains(className));
             
             foreach (var childNode in descendants)
             {
-                Console.Write(childNode.InnerHtml);
                 bool skipEntry = false;
                 Dictionary<string, string> singleDataItem = new Dictionary<string, string>();
                 //LIST ENTRY
                 foreach (var key in itemsToChoose.Keys)
                 {
-                   //DATA COLLECTION
                    string selectorTagName = itemsToChoose[key].Item1;
-                   ParserFlags pf = itemsToChoose[key].Item2.getParserFlags();
-                   string selectorClassName = itemsToChoose[key].Item2.getAttrName();
+                   ParserFlags pf = itemsToChoose[key].Item2.GetParserFlags();
+                   string selectorClassName = itemsToChoose[key].Item2.GetAttributeName();
                    string data = "";
                    switch (pf)
                    {
@@ -101,7 +96,6 @@ namespace ASP.NETCoreWebApplication.Utils
                            break;
                        }
                    }
-                   //DATA ENTRY
                    if (data == null)
                    {
                        skipEntry = true;
@@ -111,11 +105,10 @@ namespace ASP.NETCoreWebApplication.Utils
 
                 if (!skipEntry)
                 {
-                    AggregateData.Add(singleDataItem);
+                    aggregateData.Add(singleDataItem);
                 }
             }
-            //parse XPath
-            return AggregateData;
+            return aggregateData;
         }
     }
 }

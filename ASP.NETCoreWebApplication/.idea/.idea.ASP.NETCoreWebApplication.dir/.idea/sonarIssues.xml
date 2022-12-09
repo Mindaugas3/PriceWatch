@@ -18,7 +18,62 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/.idea/.idea.ASP.NETCoreWebApplication.dir/.idea/sonarIssues.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/ASP.NETCoreWebApplication.csproj">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/Controllers/HousingItemsController.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Infrastructure/HTMLNodeParser.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Infrastructure/Logger.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Infrastructure/PriceRange.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Infrastructure/Range.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Infrastructure/SeleniumScrapper.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Infrastructure/XPathParser.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Interactors/SeleniumScrapper.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Models/DataSources/AlioLt.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Models/DataSources/Amazon.cs">
           <value>
             <set />
           </value>
@@ -28,7 +83,32 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/Models/DataSources/Ebay.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/Models/DataSources/PiguLt.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Models/DataSources/Senukai.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Models/DataSources/VarleLt.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Models/PWDatabaseInitializer.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Models/PriceWatchContext.cs">
           <value>
             <set />
           </value>
@@ -38,7 +118,27 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/Utils/DefaultParameters.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/Utils/HTMLNodeParser.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Utils/InvalidLocationException.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Utils/PriceRange.cs">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Utils/XPathParser.cs">
           <value>
             <set />
           </value>

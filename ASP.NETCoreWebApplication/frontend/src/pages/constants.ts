@@ -1,0 +1,10 @@
+﻿export const DEFAULT_FILTER_VALUES = {
+    SEARCH_STRING: "",
+    PRICE_MIN: 0,
+    PRICE_MAX: 100000,
+    ROOMS_MIN: 1,
+    ROOMS_MAX: 5,
+    FLOOR_NUM: 2,
+    FETCHING_STATE: false,
+    SEARCH_IN_DESCRIPTION_STATE: false
+  }

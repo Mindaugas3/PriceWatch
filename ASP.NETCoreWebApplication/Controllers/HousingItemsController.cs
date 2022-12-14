@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using ASP.NETCoreWebApplication.Models;
-using ASP.NETCoreWebApplication.Models.DataSources;
+using System.Threading.Tasks;
+using ASP.NETCoreWebApplication.Models.Repositories;
+using ASP.NETCoreWebApplication.Models.Schemas;
+using ASP.NETCoreWebApplication.Scrappers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Range = ASP.NETCoreWebApplication.Utils.Range;
+using Newtonsoft.Json;
 
 namespace ASP.NETCoreWebApplication.Controllers
 {
@@ -13,106 +17,73 @@ namespace ASP.NETCoreWebApplication.Controllers
     [Route("[controller]/{Action}")]
     public class HousingItemsController : ControllerBase
     {
-        private readonly PriceWatchContext pc;
+        private readonly AruodasLt _aruodasLt;
+        private readonly HousingRepository _repository;
+        private readonly HousingItemsValidator _housingItemsValidator = new HousingItemsValidator();
 
-        public HousingItemsController(PriceWatchContext context)
+        public HousingItemsController(HousingRepository repository, AruodasLt aruodasLt)
         {
-            this.pc = context;
+            _repository = repository;
+            _aruodasLt = aruodasLt;
         }
         
         [HttpGet]
-        public IEnumerable<HousingObject> SqlGet()
+        [Produces("application/json")]
+        public IEnumerable<HousingObject> GetExisting()
         {
+            var query = HttpContext.Request.QueryString.Value;
+            Dictionary<string, StringValues> queryDictionary = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(query);
             
-            var requestQuery = this.Request.Query;
-            
-            Console.WriteLine(requestQuery["priceMax"]);
-
             IEnumerable<HousingObject> housingObjects;
             
-            if(requestQuery.Keys.ToArray().Length == 0)
+            if(queryDictionary.Keys.ToArray().Length == 0)
             {
-                return this.pc.HousingObjects.ToArray();
+                return _repository.GetAll();
             }
 
-            housingObjects = this.pc.HousingObjects.ToArray();
-            
-            if (requestQuery["roomsMin"] != StringValues.Empty && requestQuery["roomsMax"] != StringValues.Empty)
-            {
-                var roomsMin = Int32.Parse(requestQuery["roomsMin"]);
-                var roomsMax = Int32.Parse(requestQuery["roomsMax"]);
-
-                housingObjects = housingObjects.Where(r => r.rooms <= roomsMax && r.rooms >= roomsMin);
-            }
-
-            if (requestQuery["priceMin"] != StringValues.Empty)
-            {
-                housingObjects = housingObjects.Where(r => r.price > Int32.Parse(requestQuery["priceMin"]));
-            }
-            
-            if (requestQuery["priceMax"] != StringValues.Empty)
-            {
-                housingObjects = housingObjects.Where(r => r.price < Int32.Parse(requestQuery["priceMax"]));
-            }
-            
-            if (requestQuery["searchKey"] != StringValues.Empty)
-            {
-                housingObjects = housingObjects.Where(r => r.title.Contains(requestQuery["searchKey"]));
-            }
+            housingObjects = _repository.GetSome(queryDictionary);
 
             return housingObjects;
         }
         
-        [HttpGet]
-        public IEnumerable<HousingObject> Get()
+        [HttpPost]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IEnumerable<HousingObject>> ScanRealEstate()
         {
-            Console.Write("GET HousingItemsController");
-            
-            var requestQuery = this.Request.Query;
-
-            Range? roomsRange = null;
-            Range? priceRange = null;
-            Range? floorsRange = null;
-
-            if (requestQuery["roomsMin"] != StringValues.Empty && requestQuery["roomsMax"] != StringValues.Empty)
+            using (StreamReader reader = new StreamReader(Request.Body))
             {
-                var roomsMin = Int32.Parse(requestQuery["roomsMin"]);
-                var roomsMax = Int32.Parse(requestQuery["roomsMax"]);
-                roomsRange = new Range(roomsMin, roomsMax);
-            }
+                string text = await reader.ReadToEndAsync();
+                var body = JsonConvert.DeserializeObject<Dictionary<string, string>>(text);
 
-            if (requestQuery["floors"] != StringValues.Empty)
-            {
-                var floorsMin = Int32.Parse(requestQuery["floorsMin"]);
-                var floorsMax = Int32.Parse(requestQuery["floorsMax"]);
-                floorsRange = new Range(floorsMin, floorsMax);
-            }
-            
-            if (requestQuery["priceMin"] != StringValues.Empty && requestQuery["priceMax"] != StringValues.Empty)
-            {
-                priceRange = new Range(Int32.Parse(requestQuery["priceMin"]), Int32.Parse(requestQuery["priceMax"]));
-            }
-            
-            if (requestQuery["priceMin"] == StringValues.Empty && requestQuery["priceMax"] != StringValues.Empty)
-            {
-                priceRange = new Range(0, Int32.Parse(requestQuery["priceMax"]));
-            }
-            
-            if (requestQuery["priceMin"] != StringValues.Empty && requestQuery["priceMax"] == StringValues.Empty)
-            {
-                priceRange = new Range(Int32.Parse(requestQuery["priceMax"]), Int32.MaxValue);
-            }
+                var result = _housingItemsValidator.Validate(body);
 
-            var aruodasData = new AruodasLt(
-                HousingType.BuyFlat,
-                roomsRange ?? new Range(1, 5),
-                new Range(1, 150),
-                floorsRange ?? new Range(1, 10),
-                priceRange ?? new Range(0, 180000),
-                requestQuery["searchKey"]
-            ).Scrap(this.pc, 5);
+                if (!result.IsValid)
+                {
+                    throw new BadHttpRequestException(result.Errors.ToString());
+                }
+                
+                string targetUrl = _aruodasLt.BuildUrlFromParams(
+                    HousingType.RentFlat,
+                    Int32.Parse(body["roomsMin"]),
+                    Int32.Parse(body["roomsMax"]),
+                    Int32.Parse(body["priceMin"]),
+                    Int32.Parse(body["priceMax"]),
+                    Int32.Parse(body["areaMin"]),
+                    Int32.Parse(body["areaMax"]),
+                    Int32.Parse(body["floorsMin"]),
+                    Int32.Parse(body["floorsMax"]),
+                    FHouseState.None,
+                    body["searchKey"]
+                );
+                
+                var aruodasData = _aruodasLt.ScrapSearchResults(targetUrl);
 
-            return aruodasData;
+                var housingObjects = aruodasData.ToList();
+                _repository.InsertMany(housingObjects.ToList());
+
+                return housingObjects;
+            }
         }
     }
 }

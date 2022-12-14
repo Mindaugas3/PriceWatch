@@ -1,17 +1,16 @@
-
-﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ASP.NETCoreWebApplication.Interactors;
-using ASP.NETCoreWebApplication.Utils;
-using System.Globalization;
+using ASP.NETCoreWebApplication.Models;
+using ASP.NETCoreWebApplication.Models.Repositories;
+using ASP.NETCoreWebApplication.Models.Schemas;
+using HtmlAgilityPack;
 
- namespace ASP.NETCoreWebApplication.Models.DataSources
+namespace ASP.NETCoreWebApplication.Scrappers
  {
      public class Category
      {
@@ -43,30 +42,25 @@ using System.Globalization;
          private static List<ItemsObject> Items = new List<ItemsObject>();
          private static List<string> SubCategoryURL = new List<string>();
          private static List<string> Links = new List<string>();
-         private static List<string> CategoryURL = new List<string>();
          private static List<string> Name = new List<string>();
          private static List<string> Price = new List<string>();
          private static List<string> Rating = new List<string>();
          private static List<string> CategoryForDB = new List<string>();
          private static List<string> PictureURL = new List<string>();
 
-         static async Task PiguLT(string[] args, PriceWatchContext dbc)
+         static async Task<List<ItemObject>> scrap(List<string> categories)
          {
-
-             await GetCategories(CategoryURL);
-             int timer = 0;
-             foreach (var v in CategoryURL)
+             // await GetCategories(CategoryURL);
+             foreach (var category in categories)
              {
-                 Console.WriteLine(timer);
-                 timer++;
                  try
                  {
                      //Console.WriteLine("Getting info about " + v);
-                     await GetSubCategories(v);
+                     await GetSubCategories(category);
                  }
                  catch (Exception)
                  {
-                     SubCategoryURL.Add(v);
+                     SubCategoryURL.Add(category);
                  }
              }
 
@@ -98,7 +92,6 @@ using System.Globalization;
                  }
              }
 
-             Console.WriteLine("Done.");
              PrintData();
              List<ItemObject> databaseEntries = new List<ItemObject>();
              foreach (ItemsObject I in Items)
@@ -107,8 +100,7 @@ using System.Globalization;
                  databaseEntries.Add(obj);
              }
 
-             PWDatabaseInitializer.InsertItems(dbc, databaseEntries);
-             Console.ReadLine();
+             return databaseEntries;
          }
 
          private static void PrintData()

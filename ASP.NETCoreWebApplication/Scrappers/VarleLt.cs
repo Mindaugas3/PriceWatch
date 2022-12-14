@@ -1,16 +1,18 @@
-﻿using HtmlAgilityPack;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ASP.NETCoreWebApplication.Interactors;
-using ASP.NETCoreWebApplication.Utils;
-using System.Globalization;
+using ASP.NETCoreWebApplication.Infrastructure;
+using ASP.NETCoreWebApplication.Models;
+using ASP.NETCoreWebApplication.Models.Repositories;
+using ASP.NETCoreWebApplication.Models.Schemas;
+using HtmlAgilityPack;
+using Category = ASP.NETCoreWebApplication.Scrappers.Category;
 
-namespace ASP.NETCoreWebApplication.Models.DataSources
+namespace ASP.NETCoreWebApplication.Scrappers
 {
 
     class VarleLt
@@ -83,7 +85,7 @@ namespace ASP.NETCoreWebApplication.Models.DataSources
                 databaseEntries.Add(obj);
             }
 
-            PWDatabaseInitializer.InsertItems(dbc, databaseEntries);
+            // ItemsRepository.InsertMany(databaseEntries);
             return databaseEntries;
         }
         private static void PrintData()

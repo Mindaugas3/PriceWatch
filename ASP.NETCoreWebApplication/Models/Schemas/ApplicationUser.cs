@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
-namespace ASP.NETCoreWebApplication.Models
+namespace ASP.NETCoreWebApplication.Models.Schemas
 {
     public class ApplicationUser : IdentityUser
     {

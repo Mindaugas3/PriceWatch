@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
 
-namespace ASP.NETCoreWebApplication.Models
+namespace ASP.NETCoreWebApplication.Models.Schemas
 {
     public class ItemObject
     {

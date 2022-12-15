@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NETCoreWebApplication", "ASP.NETCoreWebApplication\ASP.NETCoreWebApplication.csproj", "{B05F5FA6-9480-4E2A-B5D4-A4664FC7F0F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{56438D80-14C1-4766-8F5C-0375C883C6CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B05F5FA6-9480-4E2A-B5D4-A4664FC7F0F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B05F5FA6-9480-4E2A-B5D4-A4664FC7F0F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B05F5FA6-9480-4E2A-B5D4-A4664FC7F0F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56438D80-14C1-4766-8F5C-0375C883C6CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56438D80-14C1-4766-8F5C-0375C883C6CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56438D80-14C1-4766-8F5C-0375C883C6CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56438D80-14C1-4766-8F5C-0375C883C6CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

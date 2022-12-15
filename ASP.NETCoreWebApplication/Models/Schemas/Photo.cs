@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ASP.NETCoreWebApplication.Models
+namespace ASP.NETCoreWebApplication.Models.Schemas
 {
     public class Photo
     {

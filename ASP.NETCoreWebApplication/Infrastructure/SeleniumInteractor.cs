@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Remote;
-using OpenQA.Selenium.Support.UI;
 
-namespace ASP.NETCoreWebApplication.Interactors
+namespace ASP.NETCoreWebApplication.Infrastructure
 {
     internal static class SeleniumScrapper
     {

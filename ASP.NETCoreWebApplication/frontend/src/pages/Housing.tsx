@@ -1,4 +1,5 @@
 ﻿import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Layout from "../components/Layout";
 import {getHousingObjects, getHousingObjectsMySQL} from "../utils/RoutePaths";
 import {Button, Card, Checkbox, FormControlLabel, Switch, TextField} from "@mui/material";
@@ -29,6 +30,12 @@ function capitalize(input: string): string {
     return first.toUpperCase() + rest.map((r: string) => r.toLowerCase()).join('');
 }
 
+function buildQuery(query: Record<string, string>): string {
+    return Object.keys(query).reduce((prevStr: string, param: string) => {
+        return prevStr + param + '=' + query[param] + '&';
+    }, '').slice(0, -1);
+}
+
 export default function HousingPage (): JSX.Element {
     const [error, setError] = useState<Error | null>(null);
     const [housingObjects, setHousingObjects] = useState<IHousingObject[]>([]);
@@ -37,10 +44,12 @@ export default function HousingPage (): JSX.Element {
     const [priceMax, setPriceMax] = useState<number>(DEFAULT_FILTER_VALUES.PRICE_MAX);
     const [roomsMin, setRoomsMin] = useState<number>(DEFAULT_FILTER_VALUES.ROOMS_MIN);
     const [roomsMax, setRoomsMax] = useState<number>(DEFAULT_FILTER_VALUES.ROOMS_MAX);
-    const [floors, setFloors] = useState<number>(DEFAULT_FILTER_VALUES.FLOOR_NUM);
+    const [floorsMin, setFloorsMin] = useState<number>(DEFAULT_FILTER_VALUES.FLOOR_MIN);
+    const [floorsMax, setFloorsMax] = useState<number>(DEFAULT_FILTER_VALUES.FLOOR_MAX);
+    const [areaMin, setAreaMin] = useState<number>(DEFAULT_FILTER_VALUES.AREA_MIN);
+    const [areaMax, setAreaMax] = useState<number>(DEFAULT_FILTER_VALUES.AREA_MAX);
     const [fetching, setFetching] = useState<boolean>(DEFAULT_FILTER_VALUES.FETCHING_STATE);
     const [searchInDescription, setSeatchInDescription] = useState<boolean>(DEFAULT_FILTER_VALUES.SEARCH_IN_DESCRIPTION_STATE);
-    const params: RequestInit = { headers: {'Content-Type': 'application/json'} };
     
     function removeDuplicatesOnURLKey(data1: IHousingObject[], data2: IHousingObject[]) {
         let primaryData: IHousingObject[] = [...data1];
@@ -66,32 +75,25 @@ export default function HousingPage (): JSX.Element {
         });
     }
     
+    // NOTE this function is for opening a new tab
     async function navigateTo(src: string){
         window.open(src, '_blank');
     }
 
-    async function fetchHousingObjectList(t?: any) {
+    async function getSavedRealEstate(query?: Record<string, any>) {
         setFetching(true);
         
-        const response = await fetch(getHousingObjectsMySQL + (
-            params ? '?' +Object.keys(t).reduce((prevStr: string, param: string) => {
-                return prevStr + param + '=' + t[param] + '&';
-            }, '').slice(0, -1) : ''
-        ));
-        const data = await response.json();
+        const response = await axios.get(getHousingObjectsMySQL + (query ? '?' + buildQuery(query) : ''));
+        const data = await response.data;
         setHousingObjects(data);
         setFetching(false);
     }
 
-    async function fetchHousingObjectListScrapper(t?: any) {
+    async function scrapeRealEstate(formBody: Record<string, any>) {
         setFetching(true);
 
-        const response = await fetch(getHousingObjects + (
-            params ? '?' +Object.keys(t).reduce((prevStr: string, param: string) => {
-                return prevStr + param + '=' + t[param] + '&';
-            }, '').slice(0, -1) : ''
-        ));
-        const data = await response.json();
+        const response = await axios.post(getHousingObjects, formBody);
+        const data = await response.data;
         let additionalData: IHousingObject[] = removeDuplicatesOnURLKey(housingObjects, data);
         
         setHousingObjects(additionalData);
@@ -99,16 +101,17 @@ export default function HousingPage (): JSX.Element {
     }
     
     useEffect(() => {
-        fetchHousingObjectList({
+        getSavedRealEstate({
             searchKey,
             priceMin,
             priceMax,
             roomsMin,
             roomsMax,
-            floors,
+            floorsMin,
+            floorsMax,
             searchInDescription
         });
-    }, [searchKey, priceMin, priceMax, roomsMin, roomsMax, floors, searchInDescription]);
+    }, [searchKey, priceMin, priceMax, roomsMin, roomsMax, floorsMin, floorsMax, searchInDescription]);
 
     return <Layout>
         <Card>
@@ -155,14 +158,17 @@ export default function HousingPage (): JSX.Element {
                 </div>
                 
                 <div className={"col-auto"}>
-                    <Button onClick={() => fetchHousingObjectListScrapper(
+                    <Button onClick={() => scrapeRealEstate(
                         {
                             searchKey,
                             priceMin,
                             priceMax,
                             roomsMin,
                             roomsMax,
-                            floors
+                            areaMin,
+                            areaMax,
+                            floorsMin,
+                            floorsMax
                         }
                     )} variant={"outlined"}>Force scan</Button>
                 </div>

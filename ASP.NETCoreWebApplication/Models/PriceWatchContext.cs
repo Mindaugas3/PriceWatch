@@ -1,6 +1,5 @@
-﻿using IdentityServer4.EntityFramework.Options;
+﻿using ASP.NETCoreWebApplication.Models.Schemas;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace ASP.NETCoreWebApplication.Models
 {
@@ -9,12 +8,9 @@ namespace ASP.NETCoreWebApplication.Models
         public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<HousingObject> HousingObjects { get; set; }
         public DbSet<ItemObject> ItemObjects { get; set; }
-        public DbSet<CurrencyRate> CurrencyRates { get; set; }
         public DbSet<Photo> ItemPhotos { get; set; }
-        public DbSet<DataSource> DataSources { get; set; }
         public DbSet<SearchHistory> SearchHistories { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<LogEntry> LogEntries { get; set; }
         
         public PriceWatchContext()
         {

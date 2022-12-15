@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using ASP.NETCoreWebApplication.Data;
 using ASP.NETCoreWebApplication.Models;
+using ASP.NETCoreWebApplication.Models.Repositories;
+using ASP.NETCoreWebApplication.Models.Schemas;
+using ASP.NETCoreWebApplication.Scrappers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,9 +34,10 @@ namespace ASP.NETCoreWebApplication
             string conn = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<PriceWatchContext>(options =>
                 options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
-
-            // services.AddAuthorization()<ApplicationDbContext>(options =>
-            //     options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
+            
+            services.AddScoped(serviceProvider => new HousingRepository(serviceProvider.GetRequiredService<PriceWatchContext>()));
+            services.AddScoped(serviceProvider => new ItemsRepository(serviceProvider.GetRequiredService<PriceWatchContext>()));
+            services.AddSingleton(provider => new AruodasLt());
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();

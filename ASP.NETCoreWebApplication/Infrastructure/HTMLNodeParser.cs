@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HtmlAgilityPack;
 
-namespace ASP.NETCoreWebApplication.Utils
+namespace ASP.NETCoreWebApplication.Infrastructure
 {
     public class HTMLNodeParser
     {

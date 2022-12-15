@@ -85,7 +85,6 @@ namespace ASP.NETCoreWebApplication.Scrappers
                 databaseEntries.Add(obj);
             }
 
-            // ItemsRepository.InsertMany(databaseEntries);
             return databaseEntries;
         }
         private static void PrintData()

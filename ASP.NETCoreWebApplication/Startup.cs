@@ -35,7 +35,6 @@ namespace ASP.NETCoreWebApplication
             services.AddDbContext<PriceWatchContext>(options =>
                 options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
             
-            
             services.AddScoped(serviceProvider => new HousingRepository(serviceProvider.GetRequiredService<PriceWatchContext>()));
             services.AddScoped(serviceProvider => new ItemsRepository(serviceProvider.GetRequiredService<PriceWatchContext>()));
             services.AddSingleton(provider => new AruodasLt());

@@ -58,6 +58,15 @@ namespace ASP.NETCoreWebApplication
                     });
             });
 
+            services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
+
+            services.AddHsts(options =>
+            {
+                options.Preload = true;
+                options.IncludeSubDomains = true;
+                options.MaxAge = System.TimeSpan.FromDays(60);
+            });
+
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -79,8 +88,6 @@ namespace ASP.NETCoreWebApplication
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
             }
 
             app.UseHttpsRedirection();
@@ -92,7 +99,21 @@ namespace ASP.NETCoreWebApplication
             app.UseAuthentication();
             app.UseIdentityServer();
             app.UseAuthorization();
-            app.UseCors();
+            app.UseCors(
+                options => options.WithOrigins("http://localhost:5000",
+                    "https://194.195.241.128:5001/")
+            );
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("X-Frame-Options", "DENY");
+                context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
+                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                context.Response.Headers.Add("Access-Control-Allow-Origin", "localhost:5001");
+                context.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+                context.Response.Headers.Remove("X-Powered-By");
+                context.Response.Headers.Remove("Content-Security-Policy");
+                await next();
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

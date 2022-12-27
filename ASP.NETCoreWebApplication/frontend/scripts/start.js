@@ -122,6 +122,10 @@ checkBrowsers(paths.appPath, isInteractive)
     devServer.options.onAfterSetupMiddleware = null;
     // Launch WebpackDevServer.
     devServer.startCallback(() => {
+
+      devServer.app.disable('x-powered-by');
+      devServer.app.disable('content-security-policy');
+      
       if (isInteractive) {
         clearConsole();
       }

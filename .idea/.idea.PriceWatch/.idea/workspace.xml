@@ -11,51 +11,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="30261318-be99-4be6-883e-598550a4fa6e" name="Default Changelist" comment="Aruodas scrapper">
-      <change afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Controllers/HousingItemsValidator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/Repositories/ItemsRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/Repositories/RepositoryBase.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testing/Scrappers/Scrappers.Fixture.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.PriceWatch/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PriceWatch/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.PriceWatch/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PriceWatch/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/ASP.NETCoreWebApplication.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/ASP.NETCoreWebApplication.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Controllers/HousingItemsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Controllers/HousingItemsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Controllers/ItemComparisonController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Controllers/ItemComparisonController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Data/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Data/ApplicationDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Infrastructure/HTMLNodeParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Infrastructure/HTMLNodeParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Infrastructure/Logger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Infrastructure/Logger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Infrastructure/Range.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Infrastructure/SeleniumScrapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Infrastructure/SeleniumInteractor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Infrastructure/XPathParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Infrastructure/XPathParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/ApplicationUser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/Schemas/ApplicationUser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/Category.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/Schemas/Category.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/CurrencyRate.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/DataSource.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/DataSources/AlioLt.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Scrappers/AlioLt.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/DataSources/AruodasLt.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Scrappers/AruodasLt.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/DataSources/PiguCategoryScrapper.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/DataSources/PiguLt.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Scrappers/PiguLt.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/DataSources/Senukai.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Scrappers/Senukai.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/DataSources/SkelbiuLt.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Scrappers/SkelbiuLt.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/DataSources/VarleLt.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Scrappers/VarleLt.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/HousingObject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/Schemas/HousingObject.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/ItemObject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/Schemas/ItemObject.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/LogEntry.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/PWDatabaseInitializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/Repositories/HousingRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/Photo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/Schemas/Photo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/PriceWatchContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/PriceWatchContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/Role.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/SearchHistory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/Schemas/SearchHistory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Pages/Shared/_LoginPartial.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Pages/Shared/_LoginPartial.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/Tests/Scrappers.test.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/pages/Housing.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/pages/Housing.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/pages/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/pages/constants.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/utils/RoutePaths.js" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/utils/RoutePaths.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PriceWatch.sln" beforeDir="false" afterPath="$PROJECT_DIR$/PriceWatch.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/netcoreapp3.1/ConsoleApp17.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/netcoreapp3.1/ConsoleApp17.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/config/webpackDevServer.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/config/webpackDevServer.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/scripts/start.js" beforeDir="false" afterPath="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/scripts/start.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +42,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="frontend1" />
+        <entry key="$PROJECT_DIR$" value="QUALITY/unit-tests" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -98,6 +58,7 @@
     <setting file="file://$USER_HOME$/Documents/.NET/web-scraping-arcticle/SeleniumScraper/Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/94910692-B371-4ED7-9360-4882DEF6754E/46/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/34040A0D-11C1-47EA-9A12-C8D6CECED80A/1C/HttpRequest.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/928D4059-EE31-42D5-83B9-391F138EE6AC/a2/2113ce80/IDictionary`2.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/.NET/web-scraping-arcticle/Website/Controllers/ScraperController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5557A195-6EC9-4C85-8520-CA28292A3B50/22/IQueryCollection.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/.NET/web-scraping-arcticle/Website/Program.cs" root0="SKIP_HIGHLIGHTING" />
@@ -108,8 +69,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/HousingObject.cs" />
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Controllers/HousingController.cs" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/components/pages/Housing.js.cs" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/pages/Search.ts" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/pages/Housing.ts" />
@@ -157,8 +116,10 @@
         <option value="$PROJECT_DIR$/Testing/Scrappers/Scrappers.Fixture.cs" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/src/utils/RoutePaths.js" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Models/Repositories/HousingRepository.cs" />
-        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Startup.cs" />
         <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Controllers/HousingItemsController.cs" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/scripts/start.js" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/frontend/public/index.html" />
+        <option value="$PROJECT_DIR$/ASP.NETCoreWebApplication/Startup.cs" />
       </list>
     </option>
   </component>
@@ -306,6 +267,11 @@
       <workItem from="1671028118998" duration="9145000" />
       <workItem from="1671055157486" duration="43000" />
       <workItem from="1671055249235" duration="3359000" />
+      <workItem from="1672076273215" duration="95000" />
+      <workItem from="1672076708356" duration="9482000" />
+      <workItem from="1672177454085" duration="2555000" />
+      <workItem from="1672181894863" duration="1432000" />
+      <workItem from="1672183795871" duration="498000" />
     </task>
     <task id="LOCAL−00001" summary="initial">
       <created>1631456019628</created>
@@ -446,7 +412,8 @@
     <MESSAGE value="complete frontend migration to TypeScript" />
     <MESSAGE value="Fix Aruodas Scrapper bug and filter out null values" />
     <MESSAGE value="Add Image fetch to Aruodas.lt scrapper" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Image fetch to Aruodas.lt scrapper" />
+    <MESSAGE value="code review" />
+    <option name="LAST_COMMIT_MESSAGE" value="code review" />
   </component>
   <component name="WindowStateProjectService">
     <state x="636" y="255" width="648" height="525" key="#Context_Actions" timestamp="1670769717841">
@@ -457,22 +424,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="457" height="464" key="DebuggerActiveHint/0.0.1920.1040@0.0.1920.1040" timestamp="1671057224168" />
-    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1671058520747">
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1672183091957">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1671058520747" />
-    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1671058520747">
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1672183091957" />
+    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1672183091957">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1671058520747" />
-    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1671058520747">
+    <state width="1877" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1672183091957" />
+    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1672183091957">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1671058520747" />
-    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1671058520747">
+    <state width="1877" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1672183091957" />
+    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1672183091957">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1671058520747" />
+    <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1672183091957" />
     <state width="1877" height="280" key="GridCell.Tab.1.bottom" timestamp="1671057404232">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

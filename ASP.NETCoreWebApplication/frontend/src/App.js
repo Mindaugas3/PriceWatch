@@ -15,7 +15,7 @@ export default class App extends Component {
     return (
       <React.Fragment>
         <Helmet>
-            <script src="https://kit.fontawesome.com/a076d05399.js" crossOrigin="anonymous"></script>
+            <script src="https://kit.fontawesome.com/d8b2026170.js" crossorigin="anonymous"></script>
         </Helmet>
         <Routes>
           <Route exact path='/' element={<Home/>} />

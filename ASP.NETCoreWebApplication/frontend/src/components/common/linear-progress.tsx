@@ -1,5 +1,5 @@
-﻿import React, { Component } from 'react';
-import { LinearProgress } from '@mui/material';
+﻿import React, { Component } from "react";
+import { LinearProgress } from "@mui/material";
 
 export class ColoredLinearProgress extends Component {
     render() {

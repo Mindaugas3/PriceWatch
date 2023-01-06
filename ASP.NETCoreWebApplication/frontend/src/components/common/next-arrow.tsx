@@ -2,7 +2,9 @@
 import Purple from "./purple";
 
 export function NextArrow() {
-    return <Purple>
-             <i className="fas fa-angle-double-right"></i>
-           </Purple>;
+    return (
+        <Purple>
+            <i className="fas fa-angle-double-right"></i>
+        </Purple>
+    );
 }

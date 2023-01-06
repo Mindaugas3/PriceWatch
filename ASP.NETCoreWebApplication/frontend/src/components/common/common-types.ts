@@ -13,6 +13,6 @@ export interface BlockProps {
     collapse?: boolean;
     shrinkToContent?: boolean;
     padding?: number | string;
-    bgcolor?: string
-    children: ReactNode
+    bgcolor?: string;
+    children: ReactNode;
 }

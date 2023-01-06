@@ -1,24 +1,24 @@
 ﻿import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {getHousingObjects, getHousingObjectsMySQL, buildQuery, capitalize} from "../utils";
-import {Button, Card, Checkbox, FormControlLabel, Grid, Switch, TextField} from "@mui/material";
+import { getHousingObjects, getHousingObjectsMySQL, buildQuery, capitalize } from "../utils";
+import { Button, Card, Checkbox, FormControlLabel, Grid, Switch, TextField } from "@mui/material";
 import { SortComponent, ColoredLinearProgress, NextArrow, Row, Layout } from "../components";
 import { ALIO, ARUODAS, DEFAULT_FILTER_VALUES } from "./constants";
 
 interface IHousingObject {
-    title: string,
-    url: string,
-    price: number,
-    location: string,
-    currency: string,
-    area: number,
-    floorsMax: number,
-    floorsThis: number,
-    description: string,
-    imgUrl: string
+    title: string;
+    url: string;
+    price: number;
+    location: string;
+    currency: string;
+    area: number;
+    floorsMax: number;
+    floorsThis: number;
+    description: string;
+    imgUrl: string;
 }
 
-export default function HousingPage (): JSX.Element {
+export default function HousingPage(): JSX.Element {
     const [error, setError] = useState<Error | null>(null);
     const [housingObjects, setHousingObjects] = useState<IHousingObject[]>([]);
     const [searchKey, setSearchKey] = useState<string>(DEFAULT_FILTER_VALUES.SEARCH_STRING);
@@ -31,14 +31,16 @@ export default function HousingPage (): JSX.Element {
     const [areaMin, setAreaMin] = useState<number>(DEFAULT_FILTER_VALUES.AREA_MIN);
     const [areaMax, setAreaMax] = useState<number>(DEFAULT_FILTER_VALUES.AREA_MAX);
     const [fetching, setFetching] = useState<boolean>(DEFAULT_FILTER_VALUES.FETCHING_STATE);
-    const [searchInDescription, setSeatchInDescription] = useState<boolean>(DEFAULT_FILTER_VALUES.SEARCH_IN_DESCRIPTION_STATE);
+    const [searchInDescription, setSeatchInDescription] = useState<boolean>(
+        DEFAULT_FILTER_VALUES.SEARCH_IN_DESCRIPTION_STATE
+    );
     const [dataSource, setDataSource] = useState<string[]>(DEFAULT_FILTER_VALUES.DATA_SOURCE);
-    
+
     function removeDuplicatesOnURLKey(data1: IHousingObject[], data2: IHousingObject[]) {
         let primaryData: IHousingObject[] = [...data1];
         let urls: string[] = primaryData.map((obj: IHousingObject) => obj.url);
         data2.forEach((obj: IHousingObject) => {
-            if(!urls.includes(obj.url)){
+            if (!urls.includes(obj.url)) {
                 primaryData.push(obj);
             }
         });
@@ -46,35 +48,38 @@ export default function HousingPage (): JSX.Element {
     }
 
     function changeDataSources(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
-        if(checked){
+        if (checked) {
             setDataSource([...dataSource, event.target.value]);
         } else {
-            setDataSource(dataSource.filter((source) => source !== event.target.value));
+            setDataSource(dataSource.filter(source => source !== event.target.value));
         }
     }
-    
+
     async function fetchLocation() {
         setFetching(true);
         return await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition((position) => {
-                setFetching(false);
-                resolve(position.coords);
-            }, (err: unknown) => {
-                setFetching(false);
-                setError(err as Error);
-            });
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    setFetching(false);
+                    resolve(position.coords);
+                },
+                (err: unknown) => {
+                    setFetching(false);
+                    setError(err as Error);
+                }
+            );
         });
     }
-    
+
     // NOTE this function is for opening a new tab
-    async function navigateTo(src: string){
-        window.open(src, '_blank');
+    async function navigateTo(src: string) {
+        window.open(src, "_blank");
     }
 
     async function getSavedRealEstate(query?: Record<string, any>) {
         setFetching(true);
-        
-        const response = await axios.get(getHousingObjectsMySQL + (query ? '?' + buildQuery(query) : ''));
+
+        const response = await axios.get(getHousingObjectsMySQL + (query ? "?" + buildQuery(query) : ""));
         const data = await response.data;
         setHousingObjects(data);
         setFetching(false);
@@ -86,11 +91,11 @@ export default function HousingPage (): JSX.Element {
         const response = await axios.post(getHousingObjects, formBody);
         const data = await response.data;
         let additionalData: IHousingObject[] = removeDuplicatesOnURLKey(housingObjects, data);
-        
+
         setHousingObjects(additionalData);
         setFetching(false);
     }
-    
+
     useEffect(() => {
         getSavedRealEstate({
             searchKey,
@@ -104,108 +109,189 @@ export default function HousingPage (): JSX.Element {
         });
     }, [searchKey, priceMin, priceMax, roomsMin, roomsMax, floorsMin, floorsMax, searchInDescription]);
 
-    return <Layout>
-        <Card>
-            <h4>Search & Filter:</h4>
-        <div className={'form-group row pl-4 pr-4'}>
-            <div className={"col-lg-3 pw-search-form-group p-3"}>
-                    <TextField id="outlined-basic" label="Search key" variant="standard" value={searchKey} onChange={(e) => setSearchKey(capitalize(e.target.value))}/>
-                    <FormControlLabel control={<Switch checked={searchInDescription} onChange={(e) => setSeatchInDescription(!searchInDescription)}/>} label="Search in description" color={"secondary"}/>
-            </div>
-            <div className={"col-lg-3 pw-search-form-group p-3"}>
-                    <TextField id="outlined-basic" label="Min price" variant="standard" value={priceMin} onChange={(e) => setPriceMin(parseInt(e.target.value) || 0)}/><br/>
-                    <TextField id="outlined-basic" label="Max price" variant="standard" value={priceMax} onChange={(e) => setPriceMax(parseInt(e.target.value) || 0)}/>
-            </div>
-            <div className={"col-lg-3 pw-search-form-group p-3"}>
-                <TextField id="outlined-basic" label="Floors min" variant="standard" />
-                <TextField id="outlined-basic" label="Floors max" variant="standard" />
-            </div>
-            <div className={"col-lg-3 pw-search-form-group p-3"}>
-                <TextField id="outlined-basic" label="Rooms min" variant="standard" value={roomsMin} onChange={(e) => setRoomsMin(parseInt(e.target.value))}/><br/>
-                <TextField id="outlined-basic" label="Rooms max" variant="standard" value={roomsMax} onChange={(e) => setRoomsMax(parseInt(e.target.value))}/>
-            </div>
-            <div className={"w-100"}>
-                
-            </div>
-            <div className={"w-100"}>
-            </div>
-            <div className={"row pl-4 pr-4 w-100"}>
-                <div className={"col-auto mr-auto"}>
-                    <FormControlLabel
-                        value={ARUODAS}
-                        color={"secondary"}
-                        control={<Checkbox defaultChecked color={"secondary"} onChange={changeDataSources}/>}
-                        label="Aruodas.lt"
-                        labelPlacement="end"
-                    />
-                    <FormControlLabel
-                        value={ALIO}
-                        color={"secondary"}
-                        control={<Checkbox defaultChecked color={"secondary"} onChange={changeDataSources}/>}
-                        label="Alio.lt"
-                        labelPlacement="end"
-                    />
+    return (
+        <Layout>
+            <Card>
+                <h4>Search & Filter:</h4>
+                <div className={"form-group row pl-4 pr-4"}>
+                    <div className={"col-lg-3 pw-search-form-group p-3"}>
+                        <TextField
+                            id="outlined-basic"
+                            label="Search key"
+                            variant="standard"
+                            value={searchKey}
+                            onChange={e => setSearchKey(capitalize(e.target.value))}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={searchInDescription}
+                                    onChange={e => setSeatchInDescription(!searchInDescription)}
+                                />
+                            }
+                            label="Search in description"
+                            color={"secondary"}
+                        />
+                    </div>
+                    <div className={"col-lg-3 pw-search-form-group p-3"}>
+                        <TextField
+                            id="outlined-basic"
+                            label="Min price"
+                            variant="standard"
+                            value={priceMin}
+                            onChange={e => setPriceMin(parseInt(e.target.value) || 0)}
+                        />
+                        <br />
+                        <TextField
+                            id="outlined-basic"
+                            label="Max price"
+                            variant="standard"
+                            value={priceMax}
+                            onChange={e => setPriceMax(parseInt(e.target.value) || 0)}
+                        />
+                    </div>
+                    <div className={"col-lg-3 pw-search-form-group p-3"}>
+                        <TextField id="outlined-basic" label="Floors min" variant="standard" />
+                        <TextField id="outlined-basic" label="Floors max" variant="standard" />
+                    </div>
+                    <div className={"col-lg-3 pw-search-form-group p-3"}>
+                        <TextField
+                            id="outlined-basic"
+                            label="Rooms min"
+                            variant="standard"
+                            value={roomsMin}
+                            onChange={e => setRoomsMin(parseInt(e.target.value))}
+                        />
+                        <br />
+                        <TextField
+                            id="outlined-basic"
+                            label="Rooms max"
+                            variant="standard"
+                            value={roomsMax}
+                            onChange={e => setRoomsMax(parseInt(e.target.value))}
+                        />
+                    </div>
+                    <div className={"w-100"}></div>
+                    <div className={"w-100"}></div>
+                    <div className={"row pl-4 pr-4 w-100"}>
+                        <div className={"col-auto mr-auto"}>
+                            <FormControlLabel
+                                value={ARUODAS}
+                                color={"secondary"}
+                                control={<Checkbox defaultChecked color={"secondary"} onChange={changeDataSources} />}
+                                label="Aruodas.lt"
+                                labelPlacement="end"
+                            />
+                            <FormControlLabel
+                                value={ALIO}
+                                color={"secondary"}
+                                control={<Checkbox defaultChecked color={"secondary"} onChange={changeDataSources} />}
+                                label="Alio.lt"
+                                labelPlacement="end"
+                            />
+                        </div>
+
+                        <div className={"col-auto"}>
+                            <Button
+                                onClick={() =>
+                                    scrapeRealEstate({
+                                        searchKey,
+                                        priceMin,
+                                        priceMax,
+                                        roomsMin,
+                                        roomsMax,
+                                        areaMin,
+                                        areaMax,
+                                        floorsMin,
+                                        floorsMax
+                                    })
+                                }
+                                variant={"outlined"}
+                            >
+                                Force scan
+                            </Button>
+                        </div>
+                    </div>
                 </div>
-                
-                <div className={"col-auto"}>
-                    <Button onClick={() => scrapeRealEstate(
-                        {
-                            searchKey,
-                            priceMin,
-                            priceMax,
-                            roomsMin,
-                            roomsMax,
-                            areaMin,
-                            areaMax,
-                            floorsMin,
-                            floorsMax
+            </Card>
+            <Card>
+                <h4>Sort keys:</h4>
+                <div className={"row pl-4 pr-4"}>
+                    <SortComponent
+                        array={housingObjects}
+                        stateCallback={setHousingObjects}
+                        predicate={(h1: IHousingObject, h2: IHousingObject) =>
+                            JSON.parse(JSON.stringify(housingObjects)).sort(
+                                (h1: IHousingObject, h2: IHousingObject) => h1.price - h2.price
+                            )
                         }
-                    )} variant={"outlined"}>Force scan</Button>
+                        label={"Price"}
+                    />
+                    <SortComponent
+                        array={housingObjects}
+                        stateCallback={setHousingObjects}
+                        predicate={async () => {
+                            await fetchLocation();
+                            return housingObjects;
+                        }}
+                        label={"Location"}
+                    />
                 </div>
-            </div>
-        </div>
-    </Card>
-        <Card>
-            <h4>Sort keys:</h4>
-            <div className={'row pl-4 pr-4'}>
-                <SortComponent array={housingObjects} stateCallback={setHousingObjects} predicate={
-                    (h1: IHousingObject, h2: IHousingObject) => JSON.parse(JSON.stringify(housingObjects))
-                        .sort((h1: IHousingObject, h2: IHousingObject) => h1.price - h2.price)} label={"Price"} />
-                <SortComponent array={housingObjects} stateCallback={setHousingObjects} predicate={async () => {
-                    await fetchLocation();
-                    return housingObjects;
-                }} label={"Location"} />
-            </div>
-        </Card>
-        {fetching && <ColoredLinearProgress />}
-        {error ? <div className="alert alert-danger" role="alert">
-            <h4 className="alert-heading">Error!</h4>
-            {error.message}
-        </div> : (housingObjects.length) && (<div>
-            {housingObjects.map((house: IHousingObject) => (
-                <Card>
-                    <Row>
-                        <Grid xs={8}>
-                            <Grid>
-                                <Grid xs={8}>
-                                    <h5>{house.title}</h5>
-                                </Grid>
-                                <Grid xs={4}>
-                                    <Button onClick={() => navigateTo(house.url)} endIcon={<NextArrow />} variant={"outlined"}>
-                                        Explore
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                            <h5><i className="fas fa-map-marked-alt"></i>{'  '}{house.location}</h5>
-                             <h5><i className="fas fa-coins"></i>{'  '}{house.price}{' '}{house.currency}</h5>
-                            <h5><i className="fas fa-building"></i>{'  '}{house.floorsThis}{'/'}{house.floorsMax}</h5>
-                        </Grid>
-                        <Grid xs={4}>
-                            <img className="float-right" alt="" src={house.imgUrl}/>
-                        </Grid>
-                    </Row>
-                </Card>
-            ))}
-        </div>)}
-    </Layout>
+            </Card>
+            {fetching && <ColoredLinearProgress />}
+            {error ? (
+                <div className="alert alert-danger" role="alert">
+                    <h4 className="alert-heading">Error!</h4>
+                    {error.message}
+                </div>
+            ) : (
+                housingObjects.length && (
+                    <div>
+                        {housingObjects.map((house: IHousingObject) => (
+                            <Card>
+                                <Row>
+                                    <Grid xs={8}>
+                                        <Grid>
+                                            <Grid xs={8}>
+                                                <h5>{house.title}</h5>
+                                            </Grid>
+                                            <Grid xs={4}>
+                                                <Button
+                                                    onClick={() => navigateTo(house.url)}
+                                                    endIcon={<NextArrow />}
+                                                    variant={"outlined"}
+                                                >
+                                                    Explore
+                                                </Button>
+                                            </Grid>
+                                        </Grid>
+                                        <h5>
+                                            <i className="fas fa-map-marked-alt"></i>
+                                            {"  "}
+                                            {house.location}
+                                        </h5>
+                                        <h5>
+                                            <i className="fas fa-coins"></i>
+                                            {"  "}
+                                            {house.price} {house.currency}
+                                        </h5>
+                                        <h5>
+                                            <i className="fas fa-building"></i>
+                                            {"  "}
+                                            {house.floorsThis}
+                                            {"/"}
+                                            {house.floorsMax}
+                                        </h5>
+                                    </Grid>
+                                    <Grid xs={4}>
+                                        <img className="float-right" alt="" src={house.imgUrl} />
+                                    </Grid>
+                                </Row>
+                            </Card>
+                        ))}
+                    </div>
+                )
+            )}
+        </Layout>
+    );
 }

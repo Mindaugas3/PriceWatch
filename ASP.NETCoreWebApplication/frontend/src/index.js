@@ -1,16 +1,16 @@
-import 'bootstrap/dist/css/bootstrap.css';
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
+import "bootstrap/dist/css/bootstrap.css";
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
 //import registerServiceWorker from './registerServiceWorker';
 
-const rootElement = document.getElementById('root');
+const rootElement = document.getElementById("root");
 
 createRoot(rootElement).render(
-  <BrowserRouter basename={process.env.PUBLIC_URL}>
-    <App />
-  </BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <App />
+    </BrowserRouter>
 );
 
 // Uncomment the line above that imports the registerServiceWorker function
@@ -21,4 +21,3 @@ createRoot(rootElement).render(
 // disabled by default when Identity is being used.
 //
 //registerServiceWorker();
-

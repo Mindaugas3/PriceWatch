@@ -1,12 +1,11 @@
-﻿import React, {Dispatch, useState} from "react";
+﻿import React, { Dispatch, useState } from "react";
 import { Button } from "@mui/material";
 import Purple from "./purple";
 
-
 enum SortState {
-    ASCENDING=1,
-    DESCENDING=-1,
-    NONE=0
+    ASCENDING = 1,
+    DESCENDING = -1,
+    NONE = 0
 }
 
 //we dont know what type of object we process there
@@ -20,7 +19,7 @@ interface ISortComponentProps {
     stateCallback: Dispatch<any>;
 }
 
-function getIcon(sortState: SortState){
+function getIcon(sortState: SortState) {
     switch (sortState) {
         case SortState.ASCENDING:
             return <i className="fas fa-arrow-up"></i>;
@@ -31,10 +30,10 @@ function getIcon(sortState: SortState){
     }
 }
 
-export function SortComponent(props: ISortComponentProps){
+export function SortComponent(props: ISortComponentProps) {
     const [sortState, setSortState] = useState<SortState>(SortState.NONE);
-    function cycle(newState: SortState){
-        switch(newState){
+    function cycle(newState: SortState) {
+        switch (newState) {
             case SortState.ASCENDING:
                 setSortState(SortState.DESCENDING);
                 return;
@@ -46,7 +45,13 @@ export function SortComponent(props: ISortComponentProps){
                 return;
         }
     }
-    return <Button variant={"outlined"} onClick={() => cycle(sortState)} endIcon={
-        <Purple bold={true}>{getIcon(sortState)}</Purple>
-    }>{props.label}</Button>
+    return (
+        <Button
+            variant={"outlined"}
+            onClick={() => cycle(sortState)}
+            endIcon={<Purple bold={true}>{getIcon(sortState)}</Purple>}
+        >
+            {props.label}
+        </Button>
+    );
 }

@@ -14,4 +14,4 @@ export const DEFAULT_FILTER_VALUES = {
     FETCHING_STATE: false,
     SEARCH_IN_DESCRIPTION_STATE: false,
     DATA_SOURCE: [ARUODAS, ALIO]
-  }
+};

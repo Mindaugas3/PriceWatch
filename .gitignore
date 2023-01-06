@@ -5,6 +5,7 @@ riderModule.iml
 /_ReSharper.Caches/
 .idea
 .vs
+launch-dev.cmd
 
 ASP.NETCoreWebApplication/appsettings.*
 ASP.NETCoreWebApplication/appsettings.json

@@ -1,14 +1,9 @@
 ﻿import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Layout from "../components/Layout";
-import {getHousingObjects, getHousingObjectsMySQL} from "../utils/RoutePaths";
-import {Button, Card, Checkbox, FormControlLabel, Switch, TextField} from "@mui/material";
-import ColAuto from "../components/common/ColAuto";
-import Row from "../components/common/Row";
-import Next from "../components/common/Next";
-import ColoredLinearProgress from "../components/common/LinearProgress";
-import SortComponent from "../components/common/SortComponent";
-import { DEFAULT_FILTER_VALUES } from "./constants";
+import {getHousingObjects, getHousingObjectsMySQL, buildQuery, capitalize} from "../utils";
+import {Button, Card, Checkbox, FormControlLabel, Grid, Switch, TextField} from "@mui/material";
+import { SortComponent, ColoredLinearProgress, NextArrow, Row, Layout } from "../components";
+import { ALIO, ARUODAS, DEFAULT_FILTER_VALUES } from "./constants";
 
 interface IHousingObject {
     title: string,
@@ -21,19 +16,6 @@ interface IHousingObject {
     floorsThis: number,
     description: string,
     imgUrl: string
-}
-
-function capitalize(input: string): string {
-    const [first, ...rest] = input.split('');
-    if(input === '') return '';
-    if(input.length === 1) return first.toUpperCase();
-    return first.toUpperCase() + rest.map((r: string) => r.toLowerCase()).join('');
-}
-
-function buildQuery(query: Record<string, string>): string {
-    return Object.keys(query).reduce((prevStr: string, param: string) => {
-        return prevStr + param + '=' + query[param] + '&';
-    }, '').slice(0, -1);
 }
 
 export default function HousingPage (): JSX.Element {
@@ -50,6 +32,7 @@ export default function HousingPage (): JSX.Element {
     const [areaMax, setAreaMax] = useState<number>(DEFAULT_FILTER_VALUES.AREA_MAX);
     const [fetching, setFetching] = useState<boolean>(DEFAULT_FILTER_VALUES.FETCHING_STATE);
     const [searchInDescription, setSeatchInDescription] = useState<boolean>(DEFAULT_FILTER_VALUES.SEARCH_IN_DESCRIPTION_STATE);
+    const [dataSource, setDataSource] = useState<string[]>(DEFAULT_FILTER_VALUES.DATA_SOURCE);
     
     function removeDuplicatesOnURLKey(data1: IHousingObject[], data2: IHousingObject[]) {
         let primaryData: IHousingObject[] = [...data1];
@@ -60,6 +43,14 @@ export default function HousingPage (): JSX.Element {
             }
         });
         return primaryData;
+    }
+
+    function changeDataSources(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+        if(checked){
+            setDataSource([...dataSource, event.target.value]);
+        } else {
+            setDataSource(dataSource.filter((source) => source !== event.target.value));
+        }
     }
     
     async function fetchLocation() {
@@ -140,21 +131,20 @@ export default function HousingPage (): JSX.Element {
             </div>
             <div className={"row pl-4 pr-4 w-100"}>
                 <div className={"col-auto mr-auto"}>
-                    
-                <FormControlLabel
-                    value="aruodas"
-                    color={"secondary"}
-                    control={<Checkbox />}
-                    label="Aruodas.lt"
-                    labelPlacement="end"
-                />
-                <FormControlLabel
-                    value="alio"
-                    color={"secondary"}
-                    control={<Checkbox />}
-                    label="Alio.lt"
-                    labelPlacement="end"
-                />
+                    <FormControlLabel
+                        value={ARUODAS}
+                        color={"secondary"}
+                        control={<Checkbox defaultChecked color={"secondary"} onChange={changeDataSources}/>}
+                        label="Aruodas.lt"
+                        labelPlacement="end"
+                    />
+                    <FormControlLabel
+                        value={ALIO}
+                        color={"secondary"}
+                        control={<Checkbox defaultChecked color={"secondary"} onChange={changeDataSources}/>}
+                        label="Alio.lt"
+                        labelPlacement="end"
+                    />
                 </div>
                 
                 <div className={"col-auto"}>
@@ -182,7 +172,7 @@ export default function HousingPage (): JSX.Element {
                     (h1: IHousingObject, h2: IHousingObject) => JSON.parse(JSON.stringify(housingObjects))
                         .sort((h1: IHousingObject, h2: IHousingObject) => h1.price - h2.price)} label={"Price"} />
                 <SortComponent array={housingObjects} stateCallback={setHousingObjects} predicate={async () => {
-                    const r = await fetchLocation();
+                    await fetchLocation();
                     return housingObjects;
                 }} label={"Location"} />
             </div>
@@ -195,24 +185,24 @@ export default function HousingPage (): JSX.Element {
             {housingObjects.map((house: IHousingObject) => (
                 <Card>
                     <Row>
-                        <ColAuto pushOthersToRight>
-                            <Row fullWidth>
-                                <ColAuto pushOthersToRight>
+                        <Grid xs={8}>
+                            <Grid>
+                                <Grid xs={8}>
                                     <h5>{house.title}</h5>
-                                </ColAuto>
-                                <ColAuto pushToRight={true}>
-                                    <Button onClick={() => navigateTo(house.url)} endIcon={<Next />} variant={"outlined"}>
+                                </Grid>
+                                <Grid xs={4}>
+                                    <Button onClick={() => navigateTo(house.url)} endIcon={<NextArrow />} variant={"outlined"}>
                                         Explore
                                     </Button>
-                                </ColAuto>
-                            </Row>
+                                </Grid>
+                            </Grid>
                             <h5><i className="fas fa-map-marked-alt"></i>{'  '}{house.location}</h5>
                              <h5><i className="fas fa-coins"></i>{'  '}{house.price}{' '}{house.currency}</h5>
                             <h5><i className="fas fa-building"></i>{'  '}{house.floorsThis}{'/'}{house.floorsMax}</h5>
-                        </ColAuto>
-                        <ColAuto >
+                        </Grid>
+                        <Grid xs={4}>
                             <img className="float-right" alt="" src={house.imgUrl}/>
-                        </ColAuto>
+                        </Grid>
                     </Row>
                 </Card>
             ))}

@@ -6,7 +6,7 @@ declare interface IRowProps {
     alignCenter?: boolean;
 }
 
-export default function (props: IRowProps): JSX.Element {
+export function Row(props: IRowProps): JSX.Element {
     return <div className={`row ${props.fullWidth ? "w-100" : ""} 
      ${props.alignCenter ? "align-content-center text-center" : ""}`}>{props.children}</div>
 }

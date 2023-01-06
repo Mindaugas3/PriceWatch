@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
-// import "./PwCss.css";
-import { ColoredElementProps } from "./CommonTypes";
+import { ColoredElementProps } from "./common-types";
 
 
 const Purple: (props: ColoredElementProps & { children: ReactNode }) => JSX.Element = ({children, bold = false}) => bold ? (

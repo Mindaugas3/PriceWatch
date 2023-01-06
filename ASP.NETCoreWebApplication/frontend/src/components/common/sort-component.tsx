@@ -1,4 +1,4 @@
-﻿import React, { Dispatch, useState } from "react";
+import React, { Dispatch, useState } from "react";
 import { Button } from "@mui/material";
 import Purple from "./purple";
 

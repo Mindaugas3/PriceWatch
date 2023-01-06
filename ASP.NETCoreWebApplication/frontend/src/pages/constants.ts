@@ -1,4 +1,4 @@
-﻿export const ARUODAS = "Aruodas.lt";
+export const ARUODAS = "Aruodas.lt";
 export const ALIO = "Alio.lt";
 
 export const DEFAULT_FILTER_VALUES = {

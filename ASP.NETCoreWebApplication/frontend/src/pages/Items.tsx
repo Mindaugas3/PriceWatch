@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getHousingObjects, getHousingObjectsMySQL } from "../utils/route-paths";
 import { Button, Card, Checkbox, FormControlLabel } from "@mui/material";
 import { Row, NextArrow, ColoredLinearProgress, Layout } from "../components";

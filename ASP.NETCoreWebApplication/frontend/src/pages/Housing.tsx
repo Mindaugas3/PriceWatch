@@ -1,6 +1,6 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { getHousingObjects, getHousingObjectsMySQL, buildQuery, capitalize } from "../utils";
+import { getHousingObjects, getHousingObjectsMySQL, buildQuery, capitalize, navigateTo } from "../utils";
 import { Button, Card, Checkbox, FormControlLabel, Grid, Switch, TextField } from "@mui/material";
 import { SortComponent, ColoredLinearProgress, NextArrow, Row, Layout } from "../components";
 import { ALIO, ARUODAS, DEFAULT_FILTER_VALUES } from "./constants";
@@ -69,11 +69,6 @@ export default function HousingPage(): JSX.Element {
                 }
             );
         });
-    }
-
-    // NOTE this function is for opening a new tab
-    async function navigateTo(src: string) {
-        window.open(src, "_blank");
     }
 
     async function getSavedRealEstate(query?: Record<string, any>) {

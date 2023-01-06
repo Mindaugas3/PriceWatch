@@ -14,3 +14,7 @@ export function capitalize(input: string): string {
     if (input.length === 1) return first.toUpperCase();
     return first.toUpperCase() + rest.map((r: string) => r.toLowerCase()).join("");
 }
+
+export async function navigateTo(src: string) {
+    window.open(src, "_blank");
+}

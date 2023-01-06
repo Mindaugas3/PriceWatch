@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { navigateHousingPage } from "../utils/route-paths";
-import Next from "./common/next-arrow";
-import Layout from "./layout";
+import { NextArrow } from "./common/next-arrow";
+import { Layout } from "./layout";
 
 const getStarted = () => (window.location.href = navigateHousingPage);
 
@@ -33,7 +33,7 @@ export class Home extends Component {
                         <div className="row">
                             <button className="getStartedBtn btn-xxl" onClick={getStarted}>
                                 Get started{"  "}
-                                <Next />
+                                <NextArrow />
                             </button>
                         </div>
                     </div>

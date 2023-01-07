@@ -96,9 +96,9 @@ namespace ASP.NETCoreWebApplication
 
             app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseIdentityServer();
-            app.UseAuthorization();
+            // app.UseAuthentication();
+            // app.UseIdentityServer();
+            // app.UseAuthorization();
             app.UseCors(
                 options => options.WithOrigins("http://localhost:5000",
                     "https://194.195.241.128:5001/")

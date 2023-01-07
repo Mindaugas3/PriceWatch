@@ -3,7 +3,7 @@ import axios from "axios";
 import { getHousingObjects, getHousingObjectsMySQL, buildQuery, capitalize, navigateTo } from "../utils";
 import { Button, Card, Checkbox, FormControlLabel, Grid, Switch, TextField } from "@mui/material";
 import { SortComponent, ColoredLinearProgress, NextArrow, Row, Layout } from "../components";
-import { ALIO, ARUODAS, DEFAULT_FILTER_VALUES } from "./constants";
+import { ALIO, ARUODAS, DEFAULT_FILTER_VALUES } from "../constants";
 
 interface IHousingObject {
     title: string;
@@ -243,14 +243,14 @@ export default function HousingPage(): JSX.Element {
                 housingObjects.length && (
                     <div>
                         {housingObjects.map((house: IHousingObject) => (
-                            <Card>
-                                <Row>
-                                    <Grid xs={8}>
+                            <Card key={house.url}>
+                                <Grid container>
+                                    <Grid xs={8} item>
                                         <Grid>
-                                            <Grid xs={8}>
+                                            <Grid xs={8} item>
                                                 <h5>{house.title}</h5>
                                             </Grid>
-                                            <Grid xs={4}>
+                                            <Grid xs={3} item>
                                                 <Button
                                                     onClick={() => navigateTo(house.url)}
                                                     endIcon={<NextArrow />}
@@ -278,10 +278,10 @@ export default function HousingPage(): JSX.Element {
                                             {house.floorsMax}
                                         </h5>
                                     </Grid>
-                                    <Grid xs={4}>
+                                    <Grid xs={3} item>
                                         <img className="float-right" alt="" src={house.imgUrl} />
                                     </Grid>
-                                </Row>
+                                </Grid>
                             </Card>
                         ))}
                     </div>

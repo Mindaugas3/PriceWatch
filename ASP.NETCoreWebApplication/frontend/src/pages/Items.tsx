@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getHousingObjects, getHousingObjectsMySQL } from "../utils/route-paths";
 import { Button, Card, Checkbox, FormControlLabel } from "@mui/material";
 import { Row, NextArrow, ColoredLinearProgress, Layout } from "../components";
-import { DEFAULT_FILTER_VALUES } from "./constants";
+import { DEFAULT_FILTER_VALUES } from "../constants";
 
 interface IItemObject {
     title: string;

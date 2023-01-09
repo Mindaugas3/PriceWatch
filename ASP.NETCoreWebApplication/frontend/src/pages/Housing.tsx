@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getHousingObjects, getHousingObjectsMySQL, buildQuery, capitalize, navigateTo } from "../utils";
 import { Button, Card, Checkbox, FormControlLabel, Grid, Switch, TextField } from "@mui/material";
-import { SortComponent, ColoredLinearProgress, NextArrow, Row, Layout } from "../components";
-import { ALIO, ARUODAS, DEFAULT_FILTER_VALUES } from "../constants";
+import { SortComponent, ColoredLinearProgress, NextArrow, Row, Layout, DropdownMenu } from "../components";
+import { ALIO, ARUODAS, BUY_FLAT, BUY_HOUSE, DEFAULT_FILTER_VALUES, RENT_FLAT, RENT_HOUSE } from "../constants";
 
 interface IHousingObject {
     title: string;
@@ -34,7 +34,8 @@ export default function HousingPage(): JSX.Element {
     const [searchInDescription, setSeatchInDescription] = useState<boolean>(
         DEFAULT_FILTER_VALUES.SEARCH_IN_DESCRIPTION_STATE
     );
-    const [dataSource, setDataSource] = useState<string[]>(DEFAULT_FILTER_VALUES.DATA_SOURCE);
+    const [dataSources, setDataSources] = useState<string[]>(DEFAULT_FILTER_VALUES.DATA_SOURCE);
+    const [propertyType, setPropertyType] = useState<string>(DEFAULT_FILTER_VALUES.PROPERTY_TYPE);
 
     function removeDuplicatesOnURLKey(data1: IHousingObject[], data2: IHousingObject[]) {
         let primaryData: IHousingObject[] = [...data1];
@@ -49,9 +50,9 @@ export default function HousingPage(): JSX.Element {
 
     function changeDataSources(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
         if (checked) {
-            setDataSource([...dataSource, event.target.value]);
+            setDataSources([...dataSources, event.target.value]);
         } else {
-            setDataSource(dataSource.filter(source => source !== event.target.value));
+            setDataSources(dataSources.filter(source => source !== event.target.value));
         }
     }
 
@@ -100,9 +101,10 @@ export default function HousingPage(): JSX.Element {
             roomsMax,
             floorsMin,
             floorsMax,
-            searchInDescription
+            searchInDescription,
+            propertyType
         });
-    }, [searchKey, priceMin, priceMax, roomsMin, roomsMax, floorsMin, floorsMax, searchInDescription]);
+    }, [searchKey, priceMin, priceMax, roomsMin, roomsMax, floorsMin, floorsMax, searchInDescription, propertyType]);
 
     return (
         <Layout>
@@ -166,10 +168,8 @@ export default function HousingPage(): JSX.Element {
                             onChange={e => setRoomsMax(parseInt(e.target.value))}
                         />
                     </div>
-                    <div className={"w-100"}></div>
-                    <div className={"w-100"}></div>
-                    <div className={"row pl-4 pr-4 w-100"}>
-                        <div className={"col-auto mr-auto"}>
+                    <Grid container>
+                        <Grid item xs={4}>
                             <FormControlLabel
                                 value={ARUODAS}
                                 color={"secondary"}
@@ -184,9 +184,16 @@ export default function HousingPage(): JSX.Element {
                                 label="Alio.lt"
                                 labelPlacement="end"
                             />
-                        </div>
-
-                        <div className={"col-auto"}>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <DropdownMenu
+                                options={[BUY_FLAT, RENT_FLAT, BUY_HOUSE, RENT_HOUSE]}
+                                displayName={["Buy flat", "Rent flat", "Buy house", "Rent house"]}
+                                currentValue={propertyType}
+                                outputCallback={setPropertyType}
+                            />
+                        </Grid>
+                        <Grid item xs={4}>
                             <Button
                                 onClick={() =>
                                     scrapeRealEstate({
@@ -198,15 +205,17 @@ export default function HousingPage(): JSX.Element {
                                         areaMin,
                                         areaMax,
                                         floorsMin,
-                                        floorsMax
+                                        floorsMax,
+                                        dataSources: dataSources.join(","),
+                                        propertyType
                                     })
                                 }
                                 variant={"outlined"}
                             >
                                 Force scan
                             </Button>
-                        </div>
-                    </div>
+                        </Grid>
+                    </Grid>
                 </div>
             </Card>
             <Card>

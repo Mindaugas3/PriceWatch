@@ -4,20 +4,29 @@ using OpenQA.Selenium.Firefox;
 
 namespace ASP.NETCoreWebApplication.Infrastructure
 {
-    internal static class SeleniumScrapper
+    public class SeleniumScrapper
     {
-        public static WebDriver CreateFirefoxDriver()
+        private readonly WebDriver _webDriver;
+
+        internal SeleniumScrapper()
+        {
+            this._webDriver = CreateFirefoxDriver();
+        }
+        private static WebDriver CreateFirefoxDriver()
         {
             var options = new FirefoxOptions();
             options.AddArgument("--headless");
             return new FirefoxDriver(options);
         }
 
-        public static WebDriver CreateChromeDriver()
+        public WebDriver GetWebDriver()
         {
-            var options = new ChromeOptions();
-            options.AddArgument("--headless");
-            return new ChromeDriver(options);
+            return this._webDriver;
+        }
+
+        ~SeleniumScrapper()
+        {
+            this._webDriver.Close();
         }
     }
 }

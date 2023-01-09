@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using ASP.NETCoreWebApplication.Data;
+using ASP.NETCoreWebApplication.Infrastructure;
 using ASP.NETCoreWebApplication.Models;
 using ASP.NETCoreWebApplication.Models.Repositories;
 using ASP.NETCoreWebApplication.Models.Schemas;
@@ -37,7 +38,8 @@ namespace ASP.NETCoreWebApplication
             
             services.AddScoped(serviceProvider => new HousingRepository(serviceProvider.GetRequiredService<PriceWatchContext>()));
             services.AddScoped(serviceProvider => new ItemsRepository(serviceProvider.GetRequiredService<PriceWatchContext>()));
-            services.AddSingleton(provider => new AruodasLt());
+            services.AddSingleton(provider => new SeleniumScrapper());
+            services.AddSingleton(provider => new AruodasLt(provider.GetRequiredService<SeleniumScrapper>()));
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();

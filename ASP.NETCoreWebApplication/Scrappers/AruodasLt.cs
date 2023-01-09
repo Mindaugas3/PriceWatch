@@ -3,41 +3,39 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using ASP.NETCoreWebApplication.Infrastructure;
-using ASP.NETCoreWebApplication.Models;
 using ASP.NETCoreWebApplication.Models.Schemas;
-using OpenQA.Selenium;
+using static ASP.NETCoreWebApplication.Infrastructure.HTMLNodeParser;
 
 namespace ASP.NETCoreWebApplication.Scrappers
 {
-    public enum HousingType
-    {
-        RentFlat,
-        BuyFlat,
-        RentHouse,
-        BuyHouse
-    }
+    using ParseOptions = ParseOptions;
+    using Selector = Tuple<string, ParseOptions>;
+    using SelectorMap = Dictionary<string, Tuple<string, ParseOptions>>;
+    using MappedValues = Dictionary<string, string>;
+    using HtmlAttribute = ParserFlags;
 
-    public enum FHouseState
+    public class AruodasLt : ScrapperBase
     {
-        Full, //IRENGTAS
-        Part, //DALINAI IRENGTAS
-        Noteq, //Neirengtas
-        Nfinished, //Nebaigtas statyti
-        Foundation, //Pamatai
-        None //Neatitinka jokiu kitu parametru
-    }
+        private static readonly HtmlAttribute ClassName = HtmlAttribute.HtmlElementClassName;
+        private static readonly HtmlAttribute Hyperlink = HtmlAttribute.Hyperlink;
+        private static readonly HtmlAttribute Image = HtmlAttribute.Image;
+        private static readonly HtmlAttribute ElementId = HtmlAttribute.HtmlElementId;
 
-    public class AruodasLt
-    {
-        private WebDriver _wd;
-
-        public AruodasLt()
+        protected override string GetLinkFromType(string type)
         {
-             _wd = SeleniumScrapper.CreateFirefoxDriver();
+            string location = type switch
+            {
+                HousingType.BuyFlat => "https://www.aruodas.lt/butai/?",
+                HousingType.BuyHouse => "https://www.aruodas.lt/namai/?",
+                HousingType.RentFlat => "https://www.aruodas.lt/butu-nuoma/?",
+                HousingType.RentHouse => "https://www.aruodas.lt/namu-nuoma/",
+                _ => throw new ArgumentException("Invalid argument for HousingType")
+            };
+            return location;
         }
 
         public string BuildUrlFromParams(
-            HousingType type,
+            string type,
             Int32 roomsMin,
             Int32 roomsMax, 
             Int32 priceMin,
@@ -50,22 +48,8 @@ namespace ASP.NETCoreWebApplication.Scrappers
             string optionalSearch = null
             )
         {
-            string location = type switch
-            {
-                HousingType.BuyFlat => "https://www.aruodas.lt/butai/?",
-                HousingType.BuyHouse => "https://www.aruodas.lt/namai/?",
-                HousingType.RentFlat => "https://www.aruodas.lt/butu-nuoma/?",
-                HousingType.RentHouse => "https://www.aruodas.lt/namu-nuoma/",
-                _ => throw new ArgumentException("Invalid argument for HousingType")
-            };
+            string location = GetLinkFromType(type);
 
-            location += "FRoomNumMin=";
-            location += roomsMin.ToString();
-            location += "&";
-            location += "FRoomNumMax=";
-            location += roomsMax.ToString();
-            location += "&";
-            
             location += "FPriceMin=";
             location += priceMin.ToString();
             location += "&";
@@ -80,11 +64,30 @@ namespace ASP.NETCoreWebApplication.Scrappers
             location += areaMax.ToString();
             location += "&";
 
-            location += "FFloorNumMin=";
-            location += floorsMin.ToString();
-            location += "&";
-            location += "FFloorNumMax=";
-            location += floorsMax.ToString();
+            if (new[] {HousingType.BuyFlat, HousingType.RentFlat}.Contains(type))
+            {
+                location += "FFloorNumMin=";
+                location += floorsMin.ToString();
+                location += "&";
+                location += "FFloorNumMax=";
+                location += floorsMax.ToString();
+                
+                location += "FRoomNumMin=";
+                location += roomsMin.ToString();
+                location += "&";
+                location += "FRoomNumMax=";
+                location += roomsMax.ToString();
+                location += "&";
+            }
+
+            if (new[] {HousingType.BuyHouse, HousingType.RentHouse}.Contains(type))
+            {
+                location += "FHouseHeightMin=";
+                location += floorsMin.ToString();
+                location += "&";
+                location += "FHouseHeightMax=";
+                location += floorsMax.ToString();
+            }
 
             if (optionalSearch != null)
             {
@@ -96,38 +99,56 @@ namespace ASP.NETCoreWebApplication.Scrappers
             return location;
         }
 
-        public IEnumerable<HousingObject> ScrapSearchResults(string url, int depth = 4)
+        protected override SelectorMap GetSelectors(string type)
         {
+            if (new[] {HousingType.BuyFlat, HousingType.RentFlat}.Contains(type))
+            {
+                return new SelectorMap
+                {
+                    ["price"] = Tuple.Create("span", new ParseOptions(ClassName, "list-item-price-v2")),
+                    ["area"] = Tuple.Create("div", new ParseOptions(ClassName, "list-AreaOverall-v2")),
+                    ["rooms"] = Tuple.Create("div", new ParseOptions(ClassName,  "list-RoomNum-v2")),
+                    ["floors"] = Tuple.Create("div", new ParseOptions(ClassName,  "list-Floors-v2")),
+                    ["location"] = Tuple.Create("h3", new ParseOptions(ClassName,  "")),
+                    ["url"] = Tuple.Create("a", new ParseOptions(Hyperlink, "")),
+                    ["img"] = Tuple.Create("img", new ParseOptions(Image, "---none")),
+
+                };
+            }
+            return new SelectorMap
+            {
+                ["img"] = Tuple.Create("img", new ParseOptions(Image, "---none")),
+                ["price"] = Tuple.Create("span", new ParseOptions(ClassName, "list-item-price-v2")),
+                ["area"] = Tuple.Create("div", new ParseOptions(ClassName, "list-AreaOverall-v2")),
+                ["location"] = Tuple.Create("h3", new ParseOptions(ElementId, "")),
+                ["url"] = Tuple.Create("a", new ParseOptions(Hyperlink, "---none")),
+            };
+        }
+
+        public override IEnumerable<HousingObject> ScrapSearchResults(string url,  string type, int depth = 4)
+        {
+            var webDriver = _seleniumScrapper.GetWebDriver();
             
             if(depth < 1) throw new ArgumentException("depth cannot be zero or negative");
-            _wd.Navigate().GoToUrl(url);
             
-            Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>> rawValues = new Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>>
-            {
-                ["price"] = Tuple.Create("span", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName,"list-item-price-v2")),
-                ["area"] = Tuple.Create("div", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName,"list-AreaOverall-v2")),
-                ["rooms"] = Tuple.Create("div", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "list-RoomNum-v2")),
-                ["floors"] = Tuple.Create("div", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "list-Floors-v2")),
-                ["location"] = Tuple.Create("h3", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "")),
-                ["url"] = Tuple.Create("a", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.Hyperlink, "")),
-                ["img"] = Tuple.Create("img", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.Image, "---none")),
+            webDriver.Navigate().GoToUrl(url);
 
-            };
-            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHtml(_wd.PageSource, "div", "list-row-v2", rawValues);
+            SelectorMap selectors = GetSelectors(type);
+            List<MappedValues> collectedData = FeedHtml(webDriver.PageSource, "div", "list-row-v2", selectors);
 
-            foreach (Dictionary<string,string> entry in collectedData)
+            foreach (MappedValues entry in collectedData)
             {
-                var titleAndDescription = ScrapInsidePage(entry["url"]);
+                entry["propertyType"] = type;
+                var titleAndDescription = ScrapInsidePage(entry["url"], type);
                 entry["title"] = titleAndDescription["title"];
                 entry["description"] = titleAndDescription["description"];
+                if (new[] {HousingType.BuyHouse, HousingType.RentHouse}.Contains(type))
+                {
+                    entry["table"] = titleAndDescription["table"];
+                }
             }
             
-            List<HousingObject> housingObjects = new List<HousingObject>();
-            foreach (var entry in collectedData)
-            {
-                HousingObject obj = ParseRawStringValues(entry);
-                housingObjects.Add(obj);
-            }
+            List<HousingObject> housingObjects = collectedData.Select(entry => ParseRawStringValues(entry)).ToList();
 
             housingObjects = housingObjects
                 .GroupBy(entry => entry.url)
@@ -137,35 +158,70 @@ namespace ASP.NETCoreWebApplication.Scrappers
             return housingObjects.ToArray();
         }
 
-        private Dictionary<string, string> ScrapInsidePage(string url)
+        private MappedValues ScrapInsidePage(string url, string type)
         {
+            var webDriver = _seleniumScrapper.GetWebDriver();
             Logger.WriteHttpGetScrappers(url);
-            _wd.Navigate().GoToUrl(url);
-            Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>> rawValues =
-                new Dictionary<string, Tuple<string, HTMLNodeParser.ParseOptions>>
+            webDriver.Navigate().GoToUrl(url);
+            SelectorMap selectors =
+                new SelectorMap
                 {
-                    ["title"] = Tuple.Create("h1", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementClassName, "obj-header-text")),
-                    ["description"] = Tuple.Create("div", new HTMLNodeParser.ParseOptions(HTMLNodeParser.ParserFlags.HtmlElementId, "collapsedTextBlock"))
+                    ["title"] = Tuple.Create("h1", new ParseOptions(ClassName, "obj-header-text")),
+                    ["description"] = Tuple.Create("div", new ParseOptions(ElementId, "collapsedTextBlock"))
                 };
-            List<Dictionary<string, string>> collectedData = HTMLNodeParser.FeedHtml(_wd.PageSource, "div", "obj-cont", rawValues);
+            if (new[] {HousingType.BuyHouse, HousingType.RentHouse}.Contains(type))
+            {
+                selectors["table"] = Tuple.Create("dl", new ParseOptions(ClassName, "obj-details"));
+            }
+            List<MappedValues> collectedData = FeedHtml(webDriver.PageSource, "div", "obj-cont", selectors);
             return collectedData.First();
         }
 
-        private static HousingObject ParseRawStringValues(Dictionary<string, string> insertable)
+        private static HousingObject ParseRawStringValues(MappedValues insertable)
         {
-            string price = insertable["price"].Replace(" ", "").Replace("\n", "").Replace("\r", "");
+            string price = TrimStringValue(insertable["price"]);
             string currency = price.Substring(price.Length - 1); //last character
 
             int priceAmount = Int32.Parse(new string(price.Where(char.IsDigit).ToArray()));
-            
-            var floors = insertable["floors"].Replace(" ", "").Replace("\n", "").Replace("\r", "").Split("/");
-            int currentFloor = Int32.Parse(floors[0]);
-            int maxFloor = Int32.Parse(floors[1]);
-            
-            var area = (int) float.Parse(insertable["area"].Replace(" ", "").Replace("\n", "").Replace("\r", "")
-                , CultureInfo.InvariantCulture);
 
-            var location = insertable["location"].Replace("\n", " ").Replace("\r", " ");
+            int currentFloor = -1;
+            int maxFloor = -1;
+
+            int rooms = -1;
+
+            if (insertable.ContainsKey("floors"))
+            {
+                string[] floors = TrimStringValue(insertable["floors"]).Split("/");
+                currentFloor = Int32.Parse(floors[0]);
+                maxFloor = Int32.Parse(floors[1]);
+            }
+            else
+            {
+                var slicedTable = insertable["table"].Split("\r\n").Where(str =>
+                {
+                    return str.Trim() != "";
+                }).Select(str => str.Trim()).ToArray();
+
+                var tableEntryIndex = slicedTable
+                    .ToList().IndexOf("Aukštų sk.:");
+                
+                currentFloor = Int32.Parse(slicedTable.ToArray()[tableEntryIndex + 1].Trim());
+                maxFloor = currentFloor;
+            }
+
+            if (insertable.ContainsKey("rooms"))
+            {
+                rooms = Int32.Parse(insertable["rooms"].Trim());
+            }
+            else
+            {
+                rooms = -1;
+            }
+            
+            int area = (int) float.Parse(TrimStringValue(insertable["area"])
+                , CultureInfo.InvariantCulture);
+            
+            string location = insertable["location"].Replace("\n", " ").Replace("\r", " ");
             HousingObject dbObject = new HousingObject
             {
                 Source_id = 1,
@@ -176,17 +232,18 @@ namespace ASP.NETCoreWebApplication.Scrappers
                 timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds(),
                 Currency = currency,
                 area = area,
-                rooms = Int32.Parse(insertable["rooms"].Trim()),
+                rooms = rooms,
                 floorsMax = maxFloor,
                 floorsThis = currentFloor,
                 description = insertable["description"],
-                imgUrl = insertable["img"]
+                imgUrl = insertable["img"],
+                propertyType = insertable["propertyType"]
             };
             return dbObject;
         }
 
-        ~AruodasLt(){
-            _wd.Close();
+        public AruodasLt(SeleniumScrapper seleniumScrapper) : base(seleniumScrapper)
+        {
         }
     }
 }

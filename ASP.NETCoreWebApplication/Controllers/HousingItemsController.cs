@@ -64,7 +64,7 @@ namespace ASP.NETCoreWebApplication.Controllers
                 }
                 
                 string targetUrl = _aruodasLt.BuildUrlFromParams(
-                    HousingType.RentFlat,
+                    body["propertyType"],
                     Int32.Parse(body["roomsMin"]),
                     Int32.Parse(body["roomsMax"]),
                     Int32.Parse(body["priceMin"]),
@@ -77,7 +77,7 @@ namespace ASP.NETCoreWebApplication.Controllers
                     body["searchKey"]
                 );
                 
-                var aruodasData = _aruodasLt.ScrapSearchResults(targetUrl);
+                var aruodasData = _aruodasLt.ScrapSearchResults(targetUrl, body["propertyType"]);
 
                 var housingObjects = aruodasData.ToList();
                 _repository.InsertMany(housingObjects.ToList());

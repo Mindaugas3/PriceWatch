@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using ASP.NETCoreWebApplication.Scrappers;
 using Microsoft.Extensions.Primitives;
 
 namespace ASP.NETCoreWebApplication.Controllers
@@ -7,20 +9,34 @@ namespace ASP.NETCoreWebApplication.Controllers
 
     public class HousingItemsValidator: AbstractValidator<Dictionary<string, string>> {
         public HousingItemsValidator() {
-            RuleFor(x => x["priceMin"]).Must(convertsToIntNullable);
-            RuleFor(x => x["priceMax"]).Must(convertsToIntNullable);
-            RuleFor(x => x["floorsMin"]).Must(convertsToInt).NotEmpty();
-            RuleFor(x => x["floorsMax"]).Must(convertsToInt).NotEmpty();
-            RuleFor(x => x["roomsMin"]).Must(convertsToInt).NotEmpty();
-            RuleFor(x => x["roomsMax"]).Must(convertsToInt).NotEmpty();
+            RuleFor(x => x["priceMin"]).Must(ConvertsToIntNullable);
+            RuleFor(x => x["priceMax"]).Must(ConvertsToIntNullable);
+            RuleFor(x => x["floorsMin"]).Must(ConvertsToInt).NotEmpty();
+            RuleFor(x => x["floorsMax"]).Must(ConvertsToInt).NotEmpty();
+            RuleFor(x => x["roomsMin"]).Must(ConvertsToInt).NotEmpty();
+            RuleFor(x => x["roomsMax"]).Must(ConvertsToInt).NotEmpty();
+            RuleFor(x => x["areaMin"]).Must(ConvertsToInt).NotEmpty();
+            RuleFor(x => x["areaMax"]).Must(ConvertsToInt).NotEmpty();
+            RuleFor(x => x["dataSources"]).Must(OneOfDataSources).NotEmpty();
+            RuleFor(x => x["propertyType"]).Must(OneOfHousingTypes).NotEmpty();
         }
 
-        public bool convertsToInt(string value) {
+        public static bool ConvertsToInt(string value) {
             int result;
             return int.TryParse(value, out result);
         }
 
-        public bool convertsToIntNullable(string value) {
+        private bool OneOfDataSources(string value) {
+            var dataSources = value.Split(",");
+            string[] availableDataSources = DataSources.Values();
+            return dataSources.All(dataSource => availableDataSources.Contains(dataSource));
+        }
+
+        private bool OneOfHousingTypes(string value) {
+            return HousingType.Values().Contains(value);
+        }
+
+        private bool ConvertsToIntNullable(string value) {
             if ((value) == StringValues.Empty) {
                 return true;
             }

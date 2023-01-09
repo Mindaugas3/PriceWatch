@@ -22,6 +22,8 @@ namespace ASP.NETCoreWebApplication.Models.Schemas
         [Required] public int floorsThis { get; set; }
         [Required] public string description { get; set; }
         public string imgUrl { get; set; }
+        
+        [Required] public string propertyType { get; set; }
 
         public HousingObject()
         {

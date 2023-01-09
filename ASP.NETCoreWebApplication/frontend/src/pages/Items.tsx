@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getHousingObjects, getHousingObjectsMySQL } from "../utils/route-paths";
 import { Button, Card, Checkbox, FormControlLabel } from "@mui/material";
-import { Row, NextArrow, ColoredLinearProgress, Layout } from "../components";
+import { NextArrow, ColoredLinearProgress, Layout } from "../components";
 import { DEFAULT_FILTER_VALUES } from "../constants";
 
 interface IItemObject {
@@ -201,8 +201,7 @@ export default function ItemsPage(): JSX.Element {
                     <div>
                         {housingObjects.map((house: IItemObject) => (
                             <Card>
-                                <Row>
-                                    {/* <ColAuto pushOthersToRight>
+                                {/* <ColAuto pushOthersToRight>
                             <Row fullWidth>
                                 <ColAuto pushOthersToRight>
                                     <h5>{house.title}</h5>
@@ -220,7 +219,6 @@ export default function ItemsPage(): JSX.Element {
                         <ColAuto >
                             <img className="float-right" src={house.imgUrl}/>
                         </ColAuto> */}
-                                </Row>
                             </Card>
                         ))}
                     </div>

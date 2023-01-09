@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getHousingObjects, getHousingObjectsMySQL, buildQuery, capitalize, navigateTo } from "../utils";
 import { Button, Card, Checkbox, FormControlLabel, Grid, Switch, TextField } from "@mui/material";
-import { SortComponent, ColoredLinearProgress, NextArrow, Row, Layout, DropdownMenu } from "../components";
+import { SortComponent, ColoredLinearProgress, NextArrow, Layout, DropdownMenu } from "../components";
 import { ALIO, ARUODAS, BUY_FLAT, BUY_HOUSE, DEFAULT_FILTER_VALUES, RENT_FLAT, RENT_HOUSE } from "../constants";
 
 interface IHousingObject {

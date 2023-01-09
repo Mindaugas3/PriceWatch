@@ -1,10 +1,9 @@
 import React from "react";
-import Purple from "./purple";
 
 export function NextArrow() {
     return (
-        <Purple>
+        <span className="purple">
             <i className="fas fa-angle-double-right"></i>
-        </Purple>
+        </span>
     );
 }

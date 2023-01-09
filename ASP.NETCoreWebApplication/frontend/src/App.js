@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Route, Routes } from "react-router";
-import { Home } from "./components/home";
-import { Counter } from "./components/counter";
+import { Home } from "./components/Home";
+import { Counter } from "./components/Counter";
 import { Helmet } from "react-helmet";
 
 import "./custom.css";
-import Housing from "./pages/housing";
-import Items from "./pages/items";
+import Housing from "./pages/Housing";
+import Items from "./pages/Items";
 
 export default class App extends Component {
     static displayName = App.name;

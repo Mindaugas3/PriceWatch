@@ -1,6 +1,5 @@
 import React, { Dispatch, useState } from "react";
 import { Button } from "@mui/material";
-import Purple from "./purple";
 
 enum SortState {
     ASCENDING = 1,
@@ -61,7 +60,11 @@ export function SortComponent(props: ISortComponentProps) {
         <Button
             variant={"outlined"}
             onClick={() => cycle(sortState)}
-            endIcon={<Purple bold={true}>{getIcon(sortState)}</Purple>}
+            endIcon={
+                <b>
+                    <span className="purple">{getIcon(sortState)}</span>
+                </b>
+            }
         >
             {props.label}
         </Button>

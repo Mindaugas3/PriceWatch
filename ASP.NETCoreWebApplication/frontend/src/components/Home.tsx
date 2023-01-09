@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { navigateHousingPage } from "../utils/route-paths";
 import { NextArrow } from "./common/next-arrow";
-import { Layout } from "./layout";
+import { Layout } from "./Layout";
 
 const getStarted = () => (window.location.href = navigateHousingPage);
 

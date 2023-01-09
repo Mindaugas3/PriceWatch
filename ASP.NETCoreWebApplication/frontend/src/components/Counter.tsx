@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Layout } from "./layout";
+import { Layout } from "./Layout";
 
 interface CounterState {
     currentCount: number;

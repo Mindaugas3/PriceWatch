@@ -9,11 +9,10 @@ enum SortState {
 }
 
 //we dont know what type of object we process there
-type AsyncPredicate = (arg0: any, arg1: any) => Promise<any[]>;
-type SyncPredicate = (arg0: any, arg1: any) => any[];
+type SyncPredicate = () => any[];
 
 interface ISortComponentProps {
-    predicate: SyncPredicate | AsyncPredicate;
+    predicate: SyncPredicate;
     label: string;
     array: any[];
     stateCallback: Dispatch<any>;
@@ -30,18 +29,31 @@ function getIcon(sortState: SortState) {
     }
 }
 
+async function execPredicate(predicate: SyncPredicate, array: any[], stateCallback: Dispatch<any>, state: SortState) {
+    if (state === SortState.NONE) {
+        return array;
+    } else if (state === SortState.ASCENDING) {
+        return stateCallback(predicate());
+    } else {
+        return stateCallback(predicate().reverse());
+    }
+}
+
 export function SortComponent(props: ISortComponentProps) {
     const [sortState, setSortState] = useState<SortState>(SortState.NONE);
     function cycle(newState: SortState) {
         switch (newState) {
             case SortState.ASCENDING:
                 setSortState(SortState.DESCENDING);
+                execPredicate(props.predicate, props.array, props.stateCallback, newState);
                 return;
             case SortState.DESCENDING:
                 setSortState(SortState.NONE);
+                execPredicate(props.predicate, props.array, props.stateCallback, newState);
                 return;
             case SortState.NONE:
                 setSortState(SortState.ASCENDING);
+                execPredicate(props.predicate, props.array, props.stateCallback, newState);
                 return;
         }
     }

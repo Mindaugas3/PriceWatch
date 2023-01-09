@@ -224,21 +224,12 @@ export default function HousingPage(): JSX.Element {
                     <SortComponent
                         array={housingObjects}
                         stateCallback={setHousingObjects}
-                        predicate={(h1: IHousingObject, h2: IHousingObject) =>
-                            JSON.parse(JSON.stringify(housingObjects)).sort(
+                        predicate={() =>
+                            (JSON.parse(JSON.stringify(housingObjects)) as IHousingObject[]).sort(
                                 (h1: IHousingObject, h2: IHousingObject) => h1.price - h2.price
                             )
                         }
                         label={"Price"}
-                    />
-                    <SortComponent
-                        array={housingObjects}
-                        stateCallback={setHousingObjects}
-                        predicate={async () => {
-                            await fetchLocation();
-                            return housingObjects;
-                        }}
-                        label={"Location"}
                     />
                 </div>
             </Card>
@@ -248,53 +239,53 @@ export default function HousingPage(): JSX.Element {
                     <h4 className="alert-heading">Error!</h4>
                     {error.message}
                 </div>
-            ) : (
-                housingObjects.length && (
-                    <div>
-                        {housingObjects.map((house: IHousingObject) => (
-                            <Card key={house.url}>
-                                <Grid container>
-                                    <Grid xs={8} item>
-                                        <Grid>
-                                            <Grid xs={8} item>
-                                                <h5>{house.title}</h5>
-                                            </Grid>
-                                            <Grid xs={3} item>
-                                                <Button
-                                                    onClick={() => navigateTo(house.url)}
-                                                    endIcon={<NextArrow />}
-                                                    variant={"outlined"}
-                                                >
-                                                    Explore
-                                                </Button>
-                                            </Grid>
+            ) : housingObjects.length ? (
+                <div>
+                    {housingObjects.map((house: IHousingObject) => (
+                        <Card key={house.url}>
+                            <Grid container>
+                                <Grid xs={8} item>
+                                    <Grid>
+                                        <Grid xs={8} item>
+                                            <h5>{house.title}</h5>
                                         </Grid>
-                                        <h5>
-                                            <i className="fas fa-map-marked-alt"></i>
-                                            {"  "}
-                                            {house.location}
-                                        </h5>
-                                        <h5>
-                                            <i className="fas fa-coins"></i>
-                                            {"  "}
-                                            {house.price} {house.currency}
-                                        </h5>
-                                        <h5>
-                                            <i className="fas fa-building"></i>
-                                            {"  "}
-                                            {house.floorsThis}
-                                            {"/"}
-                                            {house.floorsMax}
-                                        </h5>
+                                        <Grid xs={3} item>
+                                            <Button
+                                                onClick={() => navigateTo(house.url)}
+                                                endIcon={<NextArrow />}
+                                                variant={"outlined"}
+                                            >
+                                                Explore
+                                            </Button>
+                                        </Grid>
                                     </Grid>
-                                    <Grid xs={3} item>
-                                        <img className="float-right" alt="" src={house.imgUrl} />
-                                    </Grid>
+                                    <h5>
+                                        <i className="fas fa-map-marked-alt"></i>
+                                        {"  "}
+                                        {house.location}
+                                    </h5>
+                                    <h5>
+                                        <i className="fas fa-coins"></i>
+                                        {"  "}
+                                        {house.price} {house.currency}
+                                    </h5>
+                                    <h5>
+                                        <i className="fas fa-building"></i>
+                                        {"  "}
+                                        {house.floorsThis}
+                                        {"/"}
+                                        {house.floorsMax}
+                                    </h5>
                                 </Grid>
-                            </Card>
-                        ))}
-                    </div>
-                )
+                                <Grid xs={3} item>
+                                    <img className="float-right" alt="" src={house.imgUrl} />
+                                </Grid>
+                            </Grid>
+                        </Card>
+                    ))}
+                </div>
+            ) : (
+                "No results found"
             )}
         </Layout>
     );
